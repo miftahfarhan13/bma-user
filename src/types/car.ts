@@ -32,6 +32,9 @@ export interface ICarResponse {
   updated_at: string;
   deleted_at: string;
   edited_by: string;
+  bids_count: number;
+  unique_user_bids_count: number;
+  is_favorite: boolean;
   brand: {
     id: number;
     brand_name: string;

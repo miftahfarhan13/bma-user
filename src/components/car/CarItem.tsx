@@ -12,8 +12,41 @@ import IconNIK from "@/icons/IconNIK";
 import IconTax from "@/icons/IconTax";
 import Link from "next/link";
 import BadgeDefectStatus from "./BadgeDefectStatus";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toggleFavorite } from "@/service/favorite";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export default function CarItem({ car }: { car: ICarResponse }) {
+  const query = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (input: { id: string }) => toggleFavorite(input.id),
+  });
+
+  const handleToggleFavorite = async () => {
+    mutation.mutate(
+      { id: car?.id?.toString() || "" },
+      {
+        onSuccess() {
+          query.invalidateQueries({ queryKey: ["available-cars"] });
+        },
+        onError(error) {
+          if (error) {
+            const axiosError = error as AxiosError<{ message: string }>;
+            const message = axiosError?.response?.data?.message
+              ? axiosError?.response?.data?.message
+              : error?.message;
+            toast.warning("Failed", {
+              description: message,
+              position: "top-right",
+            });
+          }
+        },
+      }
+    );
+  };
+
   return (
     <Link href={`/car/${car?.id}/detail`}>
       <div className="shadow rounded-xl">
@@ -30,13 +63,32 @@ export default function CarItem({ car }: { car: ICarResponse }) {
           />
         </div>
         <div className="flex flex-col gap-2.5 p-2.5">
-          <div className="flex flex-col">
-            <p className="font-bold text-red-900">
-              {formatCurrency(car?.price)}
-            </p>
-            <p className="font-bold">
-              {car?.brand?.brand_name} {car?.car_name}
-            </p>
+          <div className="flex flex-row items-start gap-2.5 justify-between">
+            <div className="flex flex-col">
+              <p className="font-bold text-red-900">
+                {formatCurrency(car?.price)}
+              </p>
+              <p className="font-bold">
+                {car?.brand?.brand_name} {car?.car_name}
+              </p>
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation(); // prevent bubbling
+                e.preventDefault(); // prevent link navigation (extra safety)
+                handleToggleFavorite(); // your custom logic
+              }}
+            >
+              <Icon
+                icon={
+                  car?.is_favorite
+                    ? "fa6-solid:thumbs-up"
+                    : "fa6-regular:thumbs-up"
+                }
+                className="text-2xl text-red-900"
+              />
+            </div>
           </div>
           <div className="flex flex-row items-center justify-between gap-1">
             <Badge variant="secondary">{car?.car_availability}</Badge>
@@ -105,11 +157,13 @@ export default function CarItem({ car }: { car: ICarResponse }) {
             <div className="flex flex-row gap-5">
               <div className="flex flex-row gap-2">
                 <BidIcon fill="white" style={{ width: "20px" }} />
-                <p className="font-bold text-lg">0</p>
+                <p className="font-bold text-lg">{car?.bids_count}</p>
               </div>
               <div className="flex flex-row gap-2">
                 <IconUsers fill="white" style={{ width: "20px" }} />
-                <p className="font-bold text-lg">0</p>
+                <p className="font-bold text-lg">
+                  {car?.unique_user_bids_count}
+                </p>
               </div>
             </div>
           </div>
