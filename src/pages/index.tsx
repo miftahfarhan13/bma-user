@@ -2,6 +2,7 @@ import CarHome from "@/components/home/CarHome";
 import CarouselHome from "@/components/home/CarouselHome";
 import ShortcutHome from "@/components/home/ShortcutHome";
 import UserHome from "@/components/home/UserHome";
+import BottomNavigationMobile from "@/components/layout/BottomNavigationMobile";
 import Header from "@/components/layout/Header";
 import Navbar from "@/components/layout/Navbar";
 
@@ -23,6 +24,7 @@ export default function Home() {
         </div>
       </div>
       <CarHome />
+      <BottomNavigationMobile />
     </>
   );
 }

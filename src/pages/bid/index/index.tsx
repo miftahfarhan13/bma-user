@@ -1,4 +1,5 @@
 import AvaiableCar from "@/components/bid/AvailableCar";
+import BottomNavigationMobile from "@/components/layout/BottomNavigationMobile";
 import Container from "@/components/layout/Container";
 import Header from "@/components/layout/Header";
 import Navbar from "@/components/layout/Navbar";
@@ -49,6 +50,7 @@ export default function BidPage({
           <AvaiableCar isFavorite={false} />
         </div>
       </Container>
+      <BottomNavigationMobile />
     </>
   );
 }
