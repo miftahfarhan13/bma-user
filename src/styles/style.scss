@@ -1,0 +1,29 @@
+@import url('https://cdn.jsdelivr.net/npm/lightgallery@2.4.0/css/lightgallery.css');
+@import url('https://cdn.jsdelivr.net/npm/lightgallery@2.4.0/css/lg-zoom.css');
+@import url('https://cdn.jsdelivr.net/npm/lightgallery@2.4.0/css/lg-share.css');
+
+
+.masonry-gallery-demo {
+  margin: 0 auto;
+
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
+  .grid-sizer,
+  .lg-item {
+    width: 33.33%;
+  }
+
+  .lg-item {
+    float: left;
+    margin-bottom: 10px;
+  }
+
+  .lg-item img {
+    display: block;
+    max-width: 100%;
+  }
+}

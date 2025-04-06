@@ -1,5 +1,46 @@
 import { IPaginationResponse } from "./pagination";
 
+export interface ICarVideos {
+  id: number;
+  car_id: number;
+  video_file: string;
+}
+export interface ICarDefect {
+  defect_pict: string;
+  defect_title: string;
+}
+
+export interface ICarDocument {
+  id: number;
+  car_id: number;
+  bpkb_status: number;
+  stnk_status: number;
+  invoice_status: number;
+  vin_status: number;
+  form_a_status: number;
+  stnk_fotocopy_status: number;
+  manual_book_status: number;
+  service_book_status: number;
+  backup_key_status: number;
+  receipt_form_status: number;
+  declaration_right_status: number;
+  toolkit_status: number;
+  bpkb_pict: string;
+  stnk_pict: string;
+  invoice_pict: string;
+  vin_pict: string;
+  form_a_pict: string;
+  stnk_fotocopy_pict: string;
+  manual_book_pict: string;
+  service_book_pict: string;
+  backup_key_pict: string;
+  receipt_form_pict: string;
+  declaration_right_pict: string;
+  toolkit_pict: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+}
 export interface ICarResponse {
   id: number;
   car_name: string;
@@ -55,6 +96,11 @@ export interface ICarResponse {
     }
   ];
   car_images: [{ id: number; img_path: string }];
+  car_document: ICarDocument;
+  car_defects_interior?: ICarDefect[];
+  car_defects_eksterior?: ICarDefect[];
+  car_defects_others?: ICarDefect[];
+  car_videos?: ICarVideos[];
 }
 
 export type ICarPaginationResponse = {

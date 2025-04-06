@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <Header
-        title="Belanja Mobilmu - Home"
+        title="Belanja Mobil - Home"
         description="Di Belanja Mobil kamu bisa Wujudkan punya Mobil pertama kamu yang Kualitasnya Terjamin. Beli Mobil Tanpa Khawatir, Keabsahan Dokumen terjamin, Gratis Garansi Full 1 Tahun. Beli Mobil Berkualitas."
       />
       <Navbar />

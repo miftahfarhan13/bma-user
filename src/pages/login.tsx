@@ -59,7 +59,7 @@ export default function LoginPage() {
   return (
     <>
       <Header
-        title="Belanja Mobilmu - Login"
+        title="Belanja Mobil - Login"
         description="Di Belanja Mobil kamu bisa Wujudkan punya Mobil pertama kamu yang Kualitasnya Terjamin. Beli Mobil Tanpa Khawatir, Keabsahan Dokumen terjamin, Gratis Garansi Full 1 Tahun. Beli Mobil Berkualitas."
       />
       <div className="grid grid-cols-1 md:grid-cols-2 h-[100dvh]">

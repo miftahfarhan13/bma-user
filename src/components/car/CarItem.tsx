@@ -12,40 +12,12 @@ import IconNIK from "@/icons/IconNIK";
 import IconTax from "@/icons/IconTax";
 import Link from "next/link";
 import BadgeDefectStatus from "./BadgeDefectStatus";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toggleFavorite } from "@/service/favorite";
-import { AxiosError } from "axios";
-import { toast } from "sonner";
+import useToggleFavorite from "@/utils/hooks/useToggleFavorite";
 
 export default function CarItem({ car }: { car: ICarResponse }) {
-  const query = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: (input: { id: string }) => toggleFavorite(input.id),
+  const { handleToggleFavorite } = useToggleFavorite({
+    id: car?.id.toString(),
   });
-
-  const handleToggleFavorite = async () => {
-    mutation.mutate(
-      { id: car?.id?.toString() || "" },
-      {
-        onSuccess() {
-          query.invalidateQueries({ queryKey: ["available-cars"] });
-        },
-        onError(error) {
-          if (error) {
-            const axiosError = error as AxiosError<{ message: string }>;
-            const message = axiosError?.response?.data?.message
-              ? axiosError?.response?.data?.message
-              : error?.message;
-            toast.warning("Failed", {
-              description: message,
-              position: "top-right",
-            });
-          }
-        },
-      }
-    );
-  };
 
   return (
     <Link href={`/car/${car?.id}/detail`}>

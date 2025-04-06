@@ -1,7 +1,7 @@
 import { IPaginationParams } from "@/types/pagination";
 import { axiosClient } from "./apiClient";
 import { mapQueryString } from "@/utils/format/string";
-import { ICarPaginationResponse } from "@/types/car";
+import { ICarPaginationResponse, ICarResponse } from "@/types/car";
 
 type ICarParams = IPaginationParams & {
   defectStatus?: string;
@@ -36,4 +36,14 @@ export const getAvailableCars = async (
   }
 
   return response.data;
+};
+
+export const getCarById = async (carId: string): Promise<ICarResponse> => {
+  const response = await axiosClient.get(`/cars/${carId}`);
+
+  if (response.status !== 200) {
+    throw new Error(response.data.message || "Error get car");
+  }
+
+  return response.data?.result;
 };

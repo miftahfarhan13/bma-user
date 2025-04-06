@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/style.scss";
 import { AuthProvider } from "@/utils/context/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
