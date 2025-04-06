@@ -6,6 +6,7 @@ import { ICarPaginationResponse, ICarResponse } from "@/types/car";
 type ICarParams = IPaginationParams & {
   defectStatus?: string;
   brandName?: string;
+  isFavorite?: string
 };
 
 export const getCars = async (

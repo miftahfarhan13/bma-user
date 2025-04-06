@@ -13,7 +13,7 @@ import { FilterDefectCar } from "./FilterDefectCar";
 import { FilterBrand } from "./FilterBrand";
 import CarItem from "../car/CarItem";
 
-export default function AvaiableCar() {
+export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
   const { token } = useAuth();
 
   const {
@@ -46,6 +46,7 @@ export default function AvaiableCar() {
         orderBy,
         brandName,
         defectStatus,
+        isFavorite: isFavorite ? "true" : undefined,
       }),
     refetchOnWindowFocus: false,
     enabled: !!token,

@@ -35,7 +35,9 @@ export default function BidPage({
       <Navbar />
       <Container>
         <div className="flex flex-col gap-5">
-          <p className="text-center text-5xl text-red-900 font-extrabold">LELANG</p>
+          <p className="text-center text-5xl text-red-900 font-extrabold">
+            LELANG
+          </p>
           <div className="flex flex-col gap-1">
             {!biddingTime?.current_bidding_time?.end_time && (
               <div className="bg-red-900 text-center text-white font-bold py-1">
@@ -44,7 +46,7 @@ export default function BidPage({
             )}
             <BidTimer biddingTime={biddingTime} />
           </div>
-          <AvaiableCar />
+          <AvaiableCar isFavorite={false} />
         </div>
       </Container>
     </>

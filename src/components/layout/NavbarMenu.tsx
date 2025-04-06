@@ -16,12 +16,12 @@ export default function NavbarMenu() {
       name: "Beranda",
     },
     {
-      url: "/bid",
+      url: "/bid/index",
       icon: "fa6-solid:hammer",
       name: "Lelang",
     },
     {
-      url: "/favorite",
+      url: "/favorite/index",
       icon: "fa6-solid:thumbs-up",
       name: "Favorit",
     },
