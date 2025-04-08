@@ -10,8 +10,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/utils/format/string";
 import { useAuth } from "@/utils/context/AuthProvider";
+import { useRouter } from "next/router";
 
 export default function UserProfile() {
+  const router = useRouter();
   const { user } = useAuth();
 
   return (
@@ -23,9 +25,10 @@ export default function UserProfile() {
               <AvatarImage
                 src={
                   user?.avatar
-                    ? `${process.env.NEXT_PUBLIC_API_URL}/storage/${user?.avatar}`
+                    ? `${process.env.NEXT_PUBLIC_API_URL}/storage/avatars/${user?.avatar}`
                     : "/images/avatar.png"
                 }
+                className="object-cover"
               />
               <AvatarFallback>{getInitials(user?.name || "")}</AvatarFallback>
             </Avatar>
@@ -34,7 +37,9 @@ export default function UserProfile() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuGroup>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
+              Profile
+            </DropdownMenuItem>
             <ButtonLogout />
           </DropdownMenuGroup>
         </DropdownMenuContent>

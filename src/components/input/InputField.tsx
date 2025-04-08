@@ -15,6 +15,8 @@ interface InputFieldProps {
   placeholder?: string;
   required?: boolean;
   autoComplete?: string;
+  readOnly?: boolean;
+  disabled?: boolean;
 }
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
@@ -30,6 +32,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       leftAddon,
       rightAddon,
       autoComplete,
+      readOnly,
+      disabled,
       ...props
     },
     ref
@@ -44,11 +48,15 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         )}
         <Field name={name}>
           {({ field }: FieldProps) => (
-            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-gray-300">
+            <div
+              className={cn(
+                "flex items-center border border-gray-300 rounded-md overflow-hidden",
+                !disabled && "focus-within:ring-2 focus-within:ring-gray-300",
+                disabled && "bg-gray-100 cursor-not-allowed"
+              )}
+            >
               {leftAddon && (
-                <span className="px-3 text-sm text-gray-700">
-                  {leftAddon}
-                </span>
+                <span className="px-3 text-sm text-gray-700">{leftAddon}</span>
               )}
               <Input
                 ref={ref}
@@ -56,12 +64,15 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
                 placeholder={placeholder}
                 type={type}
                 className={cn(
-                  "flex-1 px-3 py-2 text-sm text-black border-none",
-                  error && touched && "border-red-500"
+                  "flex-1 px-3 py-2 text-sm text-black border-none bg-transparent",
+                  error && touched && "border-red-500",
+                  disabled && "text-gray-500"
                 )}
                 {...field}
                 {...props}
                 required={required}
+                readOnly={readOnly}
+                disabled={disabled}
                 aria-invalid={error && touched ? "true" : "false"}
                 aria-describedby={
                   error && touched ? `${name}-error` : undefined
@@ -69,9 +80,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
                 autoComplete={autoComplete}
               />
               {rightAddon && (
-                <span className="px-3 text-sm text-gray-700">
-                  {rightAddon}
-                </span>
+                <span className="px-3 text-sm text-gray-700">{rightAddon}</span>
               )}
             </div>
           )}

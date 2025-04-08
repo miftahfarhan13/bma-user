@@ -14,9 +14,10 @@ export default function UserHome() {
           <AvatarImage
             src={
               user?.avatar
-                ? `${process.env.NEXT_PUBLIC_API_URL}/storage/${user?.avatar}`
+                ? `${process.env.NEXT_PUBLIC_API_URL}/storage/avatars/${user?.avatar}`
                 : "/images/avatar.png"
             }
+            className="object-cover"
           />
           <AvatarFallback>{getInitials(user?.name || "")}</AvatarFallback>
         </Avatar>
