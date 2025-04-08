@@ -34,7 +34,7 @@ export default function ShortcutHome() {
               <p>Terjual</p>
             </div>
           </Link>
-          <Link href="/garage?status=Menang">
+          <Link href="/profile/bantuan">
             <div className="flex flex-col gap-2 text-red-900 hover:text-red-600 items-center">
               <Icon
                 icon="fa6-solid:circle-info"
