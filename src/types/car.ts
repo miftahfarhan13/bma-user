@@ -108,3 +108,9 @@ export type ICarPaginationResponse = {
     data: Array<ICarResponse>;
   };
 };
+
+export type ICarPaginationGarageResponse = {
+  data: IPaginationResponse & {
+    data: Array<{ car: ICarResponse }>;
+  };
+};

@@ -1,12 +1,16 @@
 import { IPaginationParams } from "@/types/pagination";
 import { axiosClient } from "./apiClient";
 import { mapQueryString } from "@/utils/format/string";
-import { ICarPaginationResponse, ICarResponse } from "@/types/car";
+import {
+  ICarPaginationGarageResponse,
+  ICarPaginationResponse,
+  ICarResponse,
+} from "@/types/car";
 
 type ICarParams = IPaginationParams & {
   defectStatus?: string;
   brandName?: string;
-  isFavorite?: string
+  isFavorite?: string;
 };
 
 export const getCars = async (
@@ -47,4 +51,19 @@ export const getCarById = async (carId: string): Promise<ICarResponse> => {
   }
 
   return response.data?.result;
+};
+
+export const getGarageCars = async (
+  params?: ICarParams
+): Promise<ICarPaginationGarageResponse> => {
+  const queryString = mapQueryString(params);
+  const response = await axiosClient.get(
+    `/cars/garage/car${queryString ? `?${queryString}` : ""}`
+  );
+
+  if (response.status !== 200) {
+    throw new Error(response.data.message || "Error get cars");
+  }
+
+  return response.data;
 };

@@ -18,7 +18,11 @@ import Cookies from "js-cookie";
 export default function LoginPage() {
   const query = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
-  const initialValues: ILoginRequest = { phone_number: "", password: "" };
+  const initialValues: ILoginRequest = {
+    phone_number: "",
+    password: "",
+    role: "user",
+  };
 
   const mutation = useMutation({ mutationFn: login });
 

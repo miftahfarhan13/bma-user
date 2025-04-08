@@ -38,7 +38,7 @@ export default function CarItem({ car }: { car: ICarResponse }) {
           <div className="flex flex-row items-start gap-2.5 justify-between">
             <div className="flex flex-col">
               <p className="font-bold text-red-900">
-                {formatCurrency(car?.price)}
+                {formatCurrency(car?.created_price || car?.price)}
               </p>
               <p className="font-bold">
                 {car?.brand?.brand_name} {car?.car_name}
