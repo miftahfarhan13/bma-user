@@ -81,14 +81,12 @@ export default function LoginPage() {
               initialValues={initialValues}
               validationSchema={AuthSchema}
               enableReinitialize
-              onSubmit={(e, { resetForm }) => {
+              onSubmit={(e) => {
                 const value = {
                   ...e,
                 };
 
                 handleSubmit(value);
-
-                resetForm();
               }}
             >
               {({ errors, touched }) => (

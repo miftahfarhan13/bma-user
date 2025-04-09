@@ -9,8 +9,9 @@ export default function BottomNavigationMobile() {
   const currentPage = router.pathname;
   return (
     <>
+      <div className="h-20"></div>
       <div className="block md:hidden">
-        <div className="flex flex-row justify-around py-2.5 items-center gap-5 absolute bottom-0 bg-white w-full shadow-2xl">
+        <div className="flex flex-row justify-around py-2.5 items-center gap-5 fixed bottom-0 bg-white w-full shadow-2xl">
           {menus?.map((menu) => (
             <Link key={menu?.url} href={menu?.url}>
               <div

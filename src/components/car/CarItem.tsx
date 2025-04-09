@@ -1,5 +1,5 @@
 import { ICarResponse } from "@/types/car";
-import { formatCurrency } from "@/utils/format/number";
+import { formatCurrency, formatNumber } from "@/utils/format/number";
 import Image from "next/image";
 import React from "react";
 import { Badge } from "../ui/badge";
@@ -22,17 +22,22 @@ export default function CarItem({ car }: { car: ICarResponse }) {
   return (
     <Link href={`/car/${car?.id}/detail`}>
       <div className="shadow rounded-xl">
-        <div className="relative w-full h-[280px] sm:h-[300px] md:h-[260px] xl:h-[200px]">
-          <Image
-            src={
-              car?.car_images && car?.car_images?.length > 0
-                ? `${process.env.NEXT_PUBLIC_API_URL}/storage/${car?.car_images[0]?.img_path}`
-                : ""
-            }
-            fill
-            alt={`Image ${car?.car_name}`}
-            className="object-cover rounded-xl object-center"
-          />
+        <div className="relative">
+          <div className="relative w-full h-[280px] sm:h-[300px] md:h-[260px] xl:h-[260px]">
+            <Image
+              src={
+                car?.car_images && car?.car_images?.length > 0
+                  ? `${process.env.NEXT_PUBLIC_API_URL}/storage/${car?.car_images[0]?.img_path}`
+                  : ""
+              }
+              fill
+              alt={`Image ${car?.car_name}`}
+              className="object-cover rounded-xl object-center"
+            />
+          </div>
+          <div className="absolute bottom-2 left-2 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">
+            {car?.id}1000
+          </div>
         </div>
         <div className="flex flex-col gap-2.5 p-2.5">
           <div className="flex flex-row items-start gap-2.5 justify-between">
@@ -47,9 +52,9 @@ export default function CarItem({ car }: { car: ICarResponse }) {
             <div
               className="cursor-pointer"
               onClick={(e) => {
-                e.stopPropagation(); // prevent bubbling
-                e.preventDefault(); // prevent link navigation (extra safety)
-                handleToggleFavorite(); // your custom logic
+                e.stopPropagation();
+                e.preventDefault();
+                handleToggleFavorite();
               }}
             >
               <Icon
@@ -102,7 +107,9 @@ export default function CarItem({ car }: { car: ICarResponse }) {
               <div className="flex flex-col gap-1.5 mt-1">
                 <div className="flex flex-row gap-1 items-center">
                   <Icon icon="cil:gauge" className="text-gray-600 text-lg" />
-                  <p className="text-xs text-gray-600">{car?.odometer} km</p>
+                  <p className="text-xs text-gray-600">
+                    {formatNumber(car?.odometer, "id")} km
+                  </p>
                 </div>
                 <div className="flex flex-row gap-1 items-center">
                   <Icon

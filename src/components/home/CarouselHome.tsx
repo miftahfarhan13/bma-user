@@ -35,12 +35,12 @@ export default function CarouselHome() {
               {banners.map((banner, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <div className="relative w-full h-[60px] md:h-[220px]">
+                    <div className="relative w-full aspect-[6/1]">
                       <Image
                         src={banner}
                         alt="Background"
                         fill
-                        className="object-cover rounded-sm md:rounded-xl"
+                        className="object-contain rounded-sm md:rounded-xl"
                       />
                     </div>
                   </div>

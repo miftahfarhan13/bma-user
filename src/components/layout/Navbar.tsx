@@ -1,8 +1,8 @@
 import React from "react";
-import UserProfile from "./UserProfile";
 import Image from "next/image";
 import Link from "next/link";
 import NavbarMenu from "./NavbarMenu";
+import ButtonLogout from "./ButtonLogout";
 
 export default function Navbar() {
   return (
@@ -23,7 +23,8 @@ export default function Navbar() {
           <div className="hidden md:block">
             <NavbarMenu />
           </div>
-          <UserProfile />
+          <ButtonLogout />
+          {/* <UserProfile /> */}
         </div>
       </div>
     </div>
