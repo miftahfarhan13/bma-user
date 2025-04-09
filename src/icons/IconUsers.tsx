@@ -11,7 +11,7 @@ export default function IconUsers(props: IconProps) {
       xmlnsXlink="http://www.w3.org/1999/xlink"
       version="1.1"
       viewBox="0 0 33 33"
-      enable-background="new 0 0 33 33"
+      enableBackground="new 0 0 33 33"
       xmlSpace="preserve"
       {...props}
     >

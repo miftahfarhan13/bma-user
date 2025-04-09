@@ -31,6 +31,7 @@ export default function Gallery({
           onInit={onInit}
           speed={500}
           plugins={[lgThumbnail, lgZoom]}
+          licenseKey="1234-0000-000-0000"
         >
           {images?.map((image, index) => {
             const url = `${process.env.NEXT_PUBLIC_API_URL}/storage/${image?.url}`;
@@ -43,7 +44,7 @@ export default function Gallery({
                       alt={image?.label}
                       src={url}
                       fill
-                      objectFit="cover"
+                      className="object-cover"
                     />
                   </div>
                 </div>

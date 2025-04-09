@@ -47,8 +47,6 @@ export default function DetailCar({ id }: { id: string }) {
 
   const video = data?.car_videos?.filter((item) => item?.video_file);
 
-  console.log(video);
-
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

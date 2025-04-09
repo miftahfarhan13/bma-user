@@ -97,8 +97,7 @@ export default function LoginPage() {
                       alt="Logo"
                       width={230}
                       height={70}
-                      className="self-center"
-                      objectFit="contain"
+                      className="self-center object-contain"
                     />
                     <InputField
                       label="Nomor Telepon"

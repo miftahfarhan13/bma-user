@@ -41,6 +41,7 @@ export default function CarouselHome() {
                         alt="Background"
                         fill
                         className="object-contain rounded-sm md:rounded-xl"
+                        priority
                       />
                     </div>
                   </div>

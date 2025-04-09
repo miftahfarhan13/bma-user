@@ -33,6 +33,7 @@ export default function CarItem({ car }: { car: ICarResponse }) {
               fill
               alt={`Image ${car?.car_name}`}
               className="object-cover rounded-xl object-center"
+              sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33.33vw, (min-width: 640px) 50vw, 100vw"
             />
           </div>
           <div className="absolute bottom-2 left-2 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">

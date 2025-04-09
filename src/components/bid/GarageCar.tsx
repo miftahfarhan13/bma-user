@@ -31,7 +31,7 @@ export default function GarageCar() {
 
   const { data, isLoading } = useQuery({
     queryKey: [
-      "available-cars",
+      "garage-cars",
       token,
       search,
       orderBy,

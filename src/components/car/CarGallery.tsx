@@ -49,6 +49,7 @@ export function CarGallery({
                       src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${image?.img_path}`}
                       alt={`Image ${image.id}`}
                       fill
+                      priority
                       className="h-full w-full object-cover rounded-xl"
                     />
                   </div>
@@ -75,6 +76,7 @@ export function CarGallery({
                 src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${img?.img_path}`}
                 alt={`Image ${img.id}`}
                 fill
+                priority
                 className="h-full w-full object-cover rounded-xl"
               />
             </div>
