@@ -37,7 +37,7 @@ export default function CarItem({ car }: { car: ICarResponse }) {
             />
           </div>
           <div className="absolute bottom-2 left-2 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">
-            {car?.id}1000
+            {car?.id}
           </div>
         </div>
         <div className="flex flex-col gap-2.5 p-2.5">
@@ -79,7 +79,7 @@ export default function CarItem({ car }: { car: ICarResponse }) {
                 </div>
               )}
               {car?.defect_status !== "Tidak Ada" && (
-                <BadgeDefectStatus status={car?.defect_status} />
+                <BadgeDefectStatus type="grid" status={car?.defect_status} />
               )}
             </div>
           </div>

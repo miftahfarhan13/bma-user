@@ -1,7 +1,7 @@
 import { getAvailableCars } from "@/service/car";
 import { useAuth } from "@/utils/context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { usePagination } from "@/utils/hooks/usePagination";
@@ -13,9 +13,11 @@ import { FilterDefectCar } from "./FilterDefectCar";
 import { FilterBrand } from "./FilterBrand";
 import CarItem from "../car/CarItem";
 import EmptyState from "../state/EmptyState";
+import CarItemList from "../car/CarItemList";
 
 export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
   const { token } = useAuth();
+  const [listType, setListType] = useState("grid");
 
   const {
     search,
@@ -92,9 +94,21 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
       </Formik>
 
       <div className="flex flex-col-reverse md:flex-row gap-5 items-center justify-between w-full">
-        <p>
-          <b>{data?.data?.total} Mobil</b> yang tersedia
-        </p>
+        <div className="flex flex-row items-center justify-between w-full">
+          <p>
+            <b>{data?.data?.total} Mobil</b> yang tersedia
+          </p>
+
+          <div className="block md:hidden">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setListType(listType === "grid" ? "list" : "grid")}
+            >
+              <Icon icon={listType !== "grid" ? "si:grid-fill" : "el:list"} />
+            </Button>
+          </div>
+        </div>
 
         <div className="flex flex-col md:flex-row gap-2.5 w-full md:w-fit">
           <SortCar
@@ -115,11 +129,23 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
 
       {data?.data && data?.data?.total > 0 ? (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-            {data?.data?.data?.map((car) => (
-              <CarItem key={car?.id} car={car} />
-            ))}
-          </div>
+          {listType === "grid" ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+                {data?.data?.data?.map((car) => (
+                  <CarItem key={car?.id} car={car} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-col gap-5">
+                {data?.data?.data?.map((car) => (
+                  <CarItemList key={car?.id} car={car} />
+                ))}
+              </div>
+            </>
+          )}
         </>
       ) : (
         <>
