@@ -1,8 +1,5 @@
 import React from "react";
 import { CarGallery } from "./CarGallery";
-import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/utils/context/AuthProvider";
-import { getCarById } from "@/service/car";
 import { formatCurrency } from "@/utils/format/number";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Badge } from "../ui/badge";
@@ -17,18 +14,18 @@ import CarChecklistDocument from "./CarChecklistDocument";
 import CarDamages from "./CarDamages";
 import dynamic from "next/dynamic";
 import ReactPlayer from "react-player";
+import { ICarResponse } from "@/types/car";
 
 const Gallery = dynamic(() => import("../layout/Gallery"), { ssr: false });
 
-export default function DetailCar({ id }: { id: string }) {
+export default function DetailCar({
+  data,
+  id,
+}: {
+  data: ICarResponse;
+  id: string;
+}) {
   const { handleToggleFavorite } = useToggleFavorite({ id });
-  const { token } = useAuth();
-  const { data } = useQuery({
-    queryKey: ["car", token],
-    queryFn: () => getCarById(id),
-    refetchOnWindowFocus: false,
-    enabled: !!token,
-  });
 
   const documentImages = [
     { url: data?.car_document?.bpkb_pict, label: "BPKB" },
@@ -91,7 +88,10 @@ export default function DetailCar({ id }: { id: string }) {
                 </div>
               )}
               {data?.defect_status !== "Tidak Ada" && (
-                <BadgeDefectStatus status={data?.defect_status || ""} />
+                <BadgeDefectStatus
+                  type="grid"
+                  status={data?.defect_status || ""}
+                />
               )}
             </div>
           </div>

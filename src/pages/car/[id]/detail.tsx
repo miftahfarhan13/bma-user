@@ -2,9 +2,14 @@ import DetailCar from "@/components/car/DetailCar";
 import Container from "@/components/layout/Container";
 import Header from "@/components/layout/Header";
 import Navbar from "@/components/layout/Navbar";
-import BidTimer from "@/components/timer/BidTimer";
+import { AuctionCountdown } from "@/components/timer/AuctionCountdown";
 import { axiosClient } from "@/service/apiClient";
+import { getCarById } from "@/service/car";
 import { IBiddingTimeResponse } from "@/types/biddingTime";
+import { ICarResponse } from "@/types/car";
+import { useAuth } from "@/utils/context/AuthProvider";
+import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
 import { GetServerSideProps } from "next";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -29,6 +34,19 @@ export default function CarDetailPage({
   id: string;
   biddingTime: IBiddingTimeResponse;
 }) {
+  const { token } = useAuth();
+  const { data, isLoading, isPending } = useQuery({
+    queryKey: ["car", token],
+    queryFn: () => getCarById(id),
+    refetchOnWindowFocus: false,
+    enabled: !!token,
+  });
+
+  const isBiddingEnd =
+    !biddingTime?.current_bidding_time?.end_time ||
+    moment(biddingTime?.server_time) > moment(data?.session_time_end) ||
+    data?.winner_id;
+
   return (
     <>
       <Header
@@ -37,17 +55,36 @@ export default function CarDetailPage({
       />
       <Navbar />
       <Container>
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1">
-            {!biddingTime?.current_bidding_time?.end_time && (
-              <div className="bg-red-900 text-center text-white font-bold py-1">
-                Lelang Telah Berakhir
+        {!isLoading && !isPending ? (
+          <>
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-1">
+                {isBiddingEnd ? (
+                  <div className="bg-red-900 text-center text-white font-bold py-1">
+                    Lelang Telah Berakhir
+                  </div>
+                ) : (
+                  <>
+                    {data?.session_time_end && (
+                      <AuctionCountdown
+                        label={
+                          biddingTime?.current_bidding_time?.end_time
+                            ? "Lelang berakhir dalam: "
+                            : "Lelang selanjutnya dimulai dalam: "
+                        }
+                        serverTime={biddingTime?.server_time}
+                        endTime={data?.session_time_end}
+                      />
+                    )}
+                  </>
+                )}
               </div>
-            )}
-            <BidTimer biddingTime={biddingTime} />
-          </div>
-          <DetailCar id={id} />
-        </div>
+              <DetailCar id={id} data={data as ICarResponse} />
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
       </Container>
     </>
   );

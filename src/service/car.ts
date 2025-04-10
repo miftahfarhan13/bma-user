@@ -44,7 +44,7 @@ export const getAvailableCars = async (
 };
 
 export const getCarById = async (carId: string): Promise<ICarResponse> => {
-  const response = await axiosClient.get(`/cars/${carId}`);
+  const response = await axiosClient.get(`/cars/detail/${carId}`);
 
   if (response.status !== 200) {
     throw new Error(response.data.message || "Error get car");
@@ -66,4 +66,19 @@ export const getGarageCars = async (
   }
 
   return response.data;
+};
+
+export const getLatestSeenCars = async (
+  params?: ICarParams
+): Promise<Array<ICarResponse>> => {
+  const queryString = mapQueryString(params);
+  const response = await axiosClient.get(
+    `/cars/latest-seen/car${queryString ? `?${queryString}` : ""}`
+  );
+
+  if (response.status !== 200) {
+    throw new Error(response.data.message || "Error get cars");
+  }
+
+  return response.data?.data;
 };

@@ -1,4 +1,4 @@
-import { getAvailableCars } from "@/service/car";
+import { getLatestSeenCars } from "@/service/car";
 import { useAuth } from "@/utils/context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
@@ -13,8 +13,8 @@ export default function CarHome() {
   const [listType, setListType] = useState("grid");
 
   const { data } = useQuery({
-    queryKey: ["cars", token],
-    queryFn: () => getAvailableCars({ isPaginate: "true" }),
+    queryKey: ["latest-seen-cars", token],
+    queryFn: () => getLatestSeenCars({ isPaginate: "true" }),
     refetchOnWindowFocus: false,
     enabled: !!token,
   });
@@ -38,12 +38,12 @@ export default function CarHome() {
               </Button>
             </div>
           </div>
-          {data?.data?.data && data?.data?.data?.length > 0 ? (
+          {data && data?.length > 0 ? (
             <>
               {listType === "grid" ? (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-                    {data?.data?.data?.map((car) => (
+                    {data?.map((car) => (
                       <CarItem key={car?.id} car={car} />
                     ))}
                   </div>
@@ -51,7 +51,7 @@ export default function CarHome() {
               ) : (
                 <>
                   <div className="flex flex-col gap-5">
-                    {data?.data?.data?.map((car) => (
+                    {data?.map((car) => (
                       <CarItemList key={car?.id} car={car} />
                     ))}
                   </div>
