@@ -3,7 +3,11 @@
 import * as React from "react";
 import { MultiValue } from "react-select";
 import { SelectOption } from "@/types/type";
-import InputSelect from "../input/InputSelect";
+import dynamic from "next/dynamic";
+
+const InputSelect = dynamic(() => import("../input/InputSelect"), {
+  ssr: false,
+});
 
 const defectOptions = [
   {
@@ -43,7 +47,7 @@ export function FilterDefectCar({
     <InputSelect
       options={defectOptions}
       value={selectedValues}
-      onChange={(value) => handleChange(value)}
+      onChange={(value) => handleChange(value as MultiValue<SelectOption>)}
       isMulti
       placeholder="Kondisi.."
     />

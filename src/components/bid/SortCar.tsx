@@ -1,6 +1,9 @@
-import * as React from "react";
-import InputSelect from "../input/InputSelect";
+import dynamic from "next/dynamic";
 
+import * as React from "react";
+const InputSelect = dynamic(() => import("../input/InputSelect"), {
+  ssr: false,
+});
 interface ISortOptions {
   value: string;
   label: string;
@@ -61,7 +64,7 @@ export function SortCar({
   );
 
   const handleChangeSelect = (value: ISortOptions) => {
-    handleChange(value?.orderBy || "created_at", value?.sort || "asc");
+    handleChange(value?.orderBy || "", value?.sort || "asc");
   };
 
   return (

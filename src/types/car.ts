@@ -1,3 +1,4 @@
+import { IBid } from "./bid";
 import { IPaginationResponse } from "./pagination";
 
 export interface ICarVideos {
@@ -111,6 +112,6 @@ export type ICarPaginationResponse = {
 
 export type ICarPaginationGarageResponse = {
   data: IPaginationResponse & {
-    data: Array<{ car: ICarResponse }>;
+    data: Array<{ car: ICarResponse; bid: IBid }>;
   };
 };

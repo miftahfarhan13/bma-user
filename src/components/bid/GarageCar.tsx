@@ -114,7 +114,7 @@ export default function GarageCar() {
 
       <div className="flex flex-row items-center justify-between w-full">
         <p>
-          <b>{data?.data?.total} Mobil</b> yang tersedia
+          <b>{data?.data?.data?.length} Mobil</b> yang tersedia
         </p>
 
         <div className="block md:hidden">
@@ -134,7 +134,7 @@ export default function GarageCar() {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
                 {data?.data?.data?.map((car) => (
-                  <CarItem key={car?.car?.id} car={car?.car} />
+                  <CarItem key={car?.car?.id} car={car?.car} bid={car?.bid}/>
                 ))}
               </div>
             </>
@@ -142,7 +142,7 @@ export default function GarageCar() {
             <>
               <div className="flex flex-col gap-5">
                 {data?.data?.data?.map((car) => (
-                  <CarItemList key={car?.car?.id} car={car?.car} />
+                  <CarItemList key={car?.car?.id} car={car?.car} bid={car?.bid}/>
                 ))}
               </div>
             </>

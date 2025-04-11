@@ -13,12 +13,25 @@ import IconTax from "@/icons/IconTax";
 import Link from "next/link";
 import BadgeDefectStatus from "./BadgeDefectStatus";
 import useToggleFavorite from "@/utils/hooks/useToggleFavorite";
+import { useAuth } from "@/utils/context/AuthProvider";
+import { IBid } from "@/types/bid";
+import HideCarCountdown from "./HideCarCountdown";
+import WinnerCarStatus from "./WinnerCarStatus";
 
-export default function CarItem({ car }: { car: ICarResponse }) {
+export default function CarItem({
+  car,
+  bid,
+}: {
+  car: ICarResponse;
+  bid?: IBid;
+}) {
+  const { user } = useAuth();
   const { handleToggleFavorite } = useToggleFavorite({
     id: car?.id.toString(),
   });
 
+  const isWinner = car?.winner_id === user?.id;
+  const isSold = car?.status === "Terjual";
   return (
     <Link href={`/car/${car?.id}/detail`}>
       <div className="shadow rounded-xl">
@@ -39,6 +52,10 @@ export default function CarItem({ car }: { car: ICarResponse }) {
           <div className="absolute bottom-2 left-2 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">
             {car?.id}
           </div>
+          {car?.winner_id && (
+            <WinnerCarStatus isWinner={isWinner} isSold={isSold} />
+          )}
+          {bid && <HideCarCountdown bid={bid} />}
         </div>
         <div className="flex flex-col gap-2.5 p-2.5">
           <div className="flex flex-row items-start gap-2.5 justify-between">

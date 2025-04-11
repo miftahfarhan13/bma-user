@@ -12,12 +12,25 @@ import IconTax from "@/icons/IconTax";
 import Link from "next/link";
 import BadgeDefectStatus from "./BadgeDefectStatus";
 import useToggleFavorite from "@/utils/hooks/useToggleFavorite";
+import { IBid } from "@/types/bid";
+import { useAuth } from "@/utils/context/AuthProvider";
+import WinnerCarListStatus from "./WinnerCarListStatus";
+import HideCarListCountdown from "./HideCarListCountdown";
 
-export default function CarItemList({ car }: { car: ICarResponse }) {
+export default function CarItemList({
+  car,
+  bid,
+}: {
+  car: ICarResponse;
+  bid?: IBid;
+}) {
+  const { user } = useAuth();
   const { handleToggleFavorite } = useToggleFavorite({
     id: car?.id.toString(),
   });
 
+  const isWinner = car?.winner_id === user?.id;
+  const isSold = car?.status === "Terjual";
   return (
     <Link href={`/car/${car?.id}/detail`}>
       <div className="shadow rounded-xl">
@@ -37,10 +50,14 @@ export default function CarItemList({ car }: { car: ICarResponse }) {
                   sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33.33vw, (min-width: 640px) 50vw, 100vw"
                 />
               </div>
-              <div className="absolute bottom-2 left-2 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">
+              <div className="absolute bottom-1 left-1 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">
                 {car?.id}
               </div>
-              <div className="absolute bottom-2 right-2">
+              {car?.winner_id && (
+                <WinnerCarListStatus isWinner={isWinner} isSold={isSold} />
+              )}
+              {bid && <HideCarListCountdown bid={bid} />}
+              <div className="absolute bottom-1 right-1">
                 <div className="flex flex-col items-end gap-1">
                   {car?.is_flooded === 1 && (
                     <div className="flex items-center gap-[5px] rounded-full bg-blue-500/30 px-3 py-1 text-xs font-medium text-white">

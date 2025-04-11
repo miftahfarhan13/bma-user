@@ -24,7 +24,7 @@ export const usePagination = (): UsePaginationProps => {
   const [pageSize, setPageSize] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string | undefined>();
-  const [orderBy, setOrderBy] = useState<string>("created_at");
+  const [orderBy, setOrderBy] = useState<string>("");
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [brandName, setBrandName] = useState<string[]>([]);
   const [defectStatus, setDefectStatus] = useState<string[]>([]);
