@@ -8,13 +8,13 @@ import {
 } from "@/types/car";
 
 type ICarParams = IPaginationParams & {
-  defectStatus?: string;
-  brandName?: string;
+  defectStatus?: string[];
+  brandName?: string | string[];
   isFavorite?: string;
 };
 
 export const getCars = async (
-  params?: ICarParams
+  params: ICarParams = {}
 ): Promise<ICarPaginationResponse> => {
   const queryString = mapQueryString(params);
   const response = await axiosClient.get(
@@ -29,7 +29,7 @@ export const getCars = async (
 };
 
 export const getAvailableCars = async (
-  params?: ICarParams
+  params: ICarParams = {}
 ): Promise<ICarPaginationResponse> => {
   const queryString = mapQueryString(params);
   const response = await axiosClient.get(
@@ -54,7 +54,7 @@ export const getCarById = async (carId: string): Promise<ICarResponse> => {
 };
 
 export const getGarageCars = async (
-  params?: ICarParams
+  params: ICarParams = {}
 ): Promise<ICarPaginationGarageResponse> => {
   const queryString = mapQueryString(params);
   const response = await axiosClient.get(
@@ -69,7 +69,7 @@ export const getGarageCars = async (
 };
 
 export const getLatestSeenCars = async (
-  params?: ICarParams
+  params: ICarParams = {}
 ): Promise<Array<ICarResponse>> => {
   const queryString = mapQueryString(params);
   const response = await axiosClient.get(

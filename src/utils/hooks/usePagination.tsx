@@ -1,5 +1,7 @@
+import { SelectOption } from "@/types/type";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { MultiValue } from "react-select";
 
 interface UsePaginationProps {
   pageSize: number;
@@ -7,14 +9,14 @@ interface UsePaginationProps {
   search: string | undefined;
   orderBy: string;
   sort: "asc" | "desc";
-  brandName: string;
-  defectStatus: string;
+  brandName: string[];
+  defectStatus: string[];
   handlePageSizeChange: (value: number) => void;
   handlePageChange: (value: number) => void;
   handleSearchChange: (value: string) => void;
   handleOrderByChange: (orderBy: string, sort: "asc" | "desc") => void;
-  handleBrandNameChange: (value: string) => void;
-  handleDefectStatusChange: (value: string) => void;
+  handleBrandNameChange: (value: MultiValue<SelectOption>) => void;
+  handleDefectStatusChange: (value: MultiValue<SelectOption>) => void;
 }
 
 export const usePagination = (): UsePaginationProps => {
@@ -22,10 +24,10 @@ export const usePagination = (): UsePaginationProps => {
   const [pageSize, setPageSize] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string | undefined>();
-  const [orderBy, setOrderBy] = useState<string>("");
+  const [orderBy, setOrderBy] = useState<string>("created_at");
   const [sort, setSort] = useState<"asc" | "desc">("asc");
-  const [brandName, setBrandName] = useState("");
-  const [defectStatus, setDefectStatus] = useState("");
+  const [brandName, setBrandName] = useState<string[]>([]);
+  const [defectStatus, setDefectStatus] = useState<string[]>([]);
 
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
@@ -73,24 +75,28 @@ export const usePagination = (): UsePaginationProps => {
     });
   };
 
-  const handleBrandNameChange = (value: string) => {
-    setBrandName(value);
+  const handleBrandNameChange = (values: MultiValue<SelectOption>) => {
+    const selectedValues = values.map((v) => v.value);
+    setBrandName(selectedValues);
     setPage(1);
+
     router.replace({
       query: {
         ...router.query,
-        brand_name: value,
+        brand_name: selectedValues, // this will become brand_name[]=Toyota&brand_name[]=Honda
       },
     });
   };
 
-  const handleDefectStatusChange = (value: string) => {
-    setDefectStatus(value);
+  const handleDefectStatusChange = (values: MultiValue<SelectOption>) => {
+    const selectedValues = values.map((v) => v.value);
+    setDefectStatus(selectedValues);
     setPage(1);
+
     router.replace({
       query: {
         ...router.query,
-        defect_status: value,
+        defect_status: selectedValues, // this will become brand_name[]=Toyota&brand_name[]=Honda
       },
     });
   };
@@ -119,11 +125,19 @@ export const usePagination = (): UsePaginationProps => {
     if (querySearch && typeof querySearch === "string") {
       setSearch(querySearch);
     }
-    if (queryBrandName && typeof queryBrandName === "string") {
-      setBrandName(queryBrandName);
+    if (queryBrandName) {
+      if (Array.isArray(queryBrandName)) {
+        setBrandName(queryBrandName);
+      } else if (typeof queryBrandName === "string") {
+        setBrandName([queryBrandName]);
+      }
     }
-    if (queryDefectStatus && typeof queryDefectStatus === "string") {
-      setDefectStatus(queryDefectStatus);
+    if (queryDefectStatus) {
+      if (Array.isArray(queryDefectStatus)) {
+        setDefectStatus(queryDefectStatus);
+      } else if (typeof queryDefectStatus === "string") {
+        setDefectStatus([queryDefectStatus]);
+      }
     }
   }, [router.query]);
 

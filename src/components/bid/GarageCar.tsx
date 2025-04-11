@@ -92,37 +92,39 @@ export default function GarageCar() {
         )}
       </Formik>
 
-      <div className="flex flex-col-reverse md:flex-row gap-5 items-center justify-between w-full">
-        <div className="flex flex-row items-center justify-between w-full">
-          <p>
-            <b>{data?.data?.data?.length} Mobil</b> yang tersedia
-          </p>
-
-          <div className="block md:hidden">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setListType(listType === "grid" ? "list" : "grid")}
-            >
-              <Icon icon={listType !== "grid" ? "si:grid-fill" : "el:list"} />
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-2.5 w-full md:w-fit">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-2.5 w-full md:w-[50%] self-end">
+        <div className="mb-2.5 md:mb-0">
           <SortCar
             orderBy={orderBy}
             sort={sort}
             handleChange={handleOrderByChange}
           />
+        </div>
+        <div className="grid grid-cols-2 gap-2.5 col-span-2">
           <FilterDefectCar
             defectStatus={defectStatus}
             handleChangeDefectStatus={handleDefectStatusChange}
           />
           <FilterBrand
             brandName={brandName}
-            handleChangeBrandName={handleBrandNameChange}
+            handleChangeBrandName={(value) => handleBrandNameChange(value)}
           />
+        </div>
+      </div>
+
+      <div className="flex flex-row items-center justify-between w-full">
+        <p>
+          <b>{data?.data?.total} Mobil</b> yang tersedia
+        </p>
+
+        <div className="block md:hidden">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setListType(listType === "grid" ? "list" : "grid")}
+          >
+            <Icon icon={listType !== "grid" ? "si:grid-fill" : "el:list"} />
+          </Button>
         </div>
       </div>
 

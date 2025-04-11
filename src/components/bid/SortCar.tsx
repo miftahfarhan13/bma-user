@@ -1,20 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import InputSelect from "../input/InputSelect";
 
 interface ISortOptions {
   value: string;
@@ -71,75 +56,21 @@ export function SortCar({
   sort: string;
   handleChange: (orderBy: string, sort: "asc" | "desc") => void;
 }) {
-  const [open, setOpen] = React.useState(false);
-
   const defaultValue = sortOptions.find(
     (opt) => opt.orderBy === orderBy && opt.sort === sort
   );
 
+  const handleChangeSelect = (value: ISortOptions) => {
+    handleChange(value?.orderBy || "created_at", value?.sort || "asc");
+  };
+
   return (
-    <div className="relative">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="min-w-[200px] justify-between pr-10 w-full"
-          >
-            {defaultValue?.value
-              ? sortOptions.find(
-                  (opt) => opt.orderBy === orderBy && opt.sort === sort
-                )?.label
-              : "Urutkan..."}
-            <ChevronsUpDown className="opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandList>
-              <CommandGroup>
-                {sortOptions.map((opt) => (
-                  <CommandItem
-                    key={opt.value}
-                    value={opt.value}
-                    onSelect={(currentValue) => {
-                      const selected = sortOptions.find(
-                        (opt) => opt.value === currentValue
-                      );
-
-                      handleChange(
-                        selected?.orderBy || "",
-                        selected?.sort || "asc"
-                      );
-                      setOpen(false);
-                    }}
-                  >
-                    {opt.label}
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        defaultValue?.value === opt.value
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-
-      {orderBy && (
-        <button
-          onClick={() => handleChange("", "asc")}
-          className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-        >
-          <X size={16} />
-        </button>
-      )}
-    </div>
+    <InputSelect
+      options={sortOptions}
+      value={defaultValue}
+      onChange={(value) => handleChangeSelect(value as ISortOptions)}
+      placeholder="Urutkan.."
+      isClearable
+    />
   );
 }

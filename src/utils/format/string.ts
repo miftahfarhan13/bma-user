@@ -9,15 +9,21 @@ export function getInitials(name: string) {
 
 const toSnakeCase = (str: string): string =>
   str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mapQueryString = (params: any) => {
+export const mapQueryString = (params: Record<string, any>) => {
   const queryArray: string[] = [];
 
   Object.entries(params)
     .filter(([, value]) => value !== undefined)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .forEach(([key, value]: any) => {
-      queryArray.push(`${toSnakeCase(key)}=${encodeURIComponent(value)}`);
+    .forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((v) =>
+          queryArray.push(`${toSnakeCase(key)}[]=${encodeURIComponent(v)}`)
+        );
+      } else {
+        queryArray.push(`${toSnakeCase(key)}=${encodeURIComponent(value)}`);
+      }
     });
 
   return queryArray.join("&");
