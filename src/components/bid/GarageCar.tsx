@@ -14,6 +14,7 @@ import { FilterBrand } from "./FilterBrand";
 import CarItem from "../car/CarItem";
 import EmptyState from "../state/EmptyState";
 import CarItemList from "../car/CarItemList";
+import CarItemSkeleton from "../car/CarItemSkeleton";
 
 export default function GarageCar() {
   const { token } = useAuth();
@@ -31,7 +32,7 @@ export default function GarageCar() {
     handleDefectStatusChange,
   } = usePagination();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isPending } = useQuery({
     queryKey: [
       "garage-cars",
       token,
@@ -80,7 +81,7 @@ export default function GarageCar() {
                 className="bg-red-800 hover:bg-red-900 font-bold"
                 disabled={isLoading}
               >
-                {isLoading ? (
+                {isLoading && isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
                   <Icon icon="bx:search" />
@@ -128,32 +129,53 @@ export default function GarageCar() {
         </div>
       </div>
 
-      {data?.data?.data && data?.data?.data?.length > 0 ? (
+      {!isLoading && !isPending ? (
         <>
-          {listType === "grid" ? (
+          {data?.data?.data && data?.data?.data?.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-                {data?.data?.data?.map((car) => (
-                  <CarItem key={car?.car?.id} car={car?.car} bid={car?.bid}/>
-                ))}
-              </div>
+              {listType === "grid" ? (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+                    {data?.data?.data?.map((car) => (
+                      <CarItem
+                        key={car?.car?.id}
+                        car={car?.car}
+                        bid={car?.bid}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-5">
+                    {data?.data?.data?.map((car) => (
+                      <CarItemList
+                        key={car?.car?.id}
+                        car={car?.car}
+                        bid={car?.bid}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </>
           ) : (
             <>
-              <div className="flex flex-col gap-5">
-                {data?.data?.data?.map((car) => (
-                  <CarItemList key={car?.car?.id} car={car?.car} bid={car?.bid}/>
-                ))}
-              </div>
+              <EmptyState
+                message="Tidak ada Mobil yang tersedia. <br> Cari Mobil anda sekarang!"
+                isUseSearch
+              />
             </>
           )}
         </>
       ) : (
         <>
-          <EmptyState
-            message="Tidak ada Mobil yang tersedia. <br> Cari Mobil anda sekarang!"
-            isUseSearch
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+            <CarItemSkeleton />
+            <CarItemSkeleton />
+            <CarItemSkeleton />
+            <CarItemSkeleton />
+          </div>
         </>
       )}
     </div>

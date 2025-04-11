@@ -7,12 +7,13 @@ import EmptyState from "../state/EmptyState";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import CarItemList from "../car/CarItemList";
+import CarItemSkeleton from "../car/CarItemSkeleton";
 
 export default function CarHome() {
   const { token } = useAuth();
   const [listType, setListType] = useState("grid");
 
-  const { data } = useQuery({
+  const { data, isLoading, isPending } = useQuery({
     queryKey: ["latest-seen-cars", token],
     queryFn: () => getLatestSeenCars({ isPaginate: "true" }),
     refetchOnWindowFocus: false,
@@ -38,32 +39,45 @@ export default function CarHome() {
               </Button>
             </div>
           </div>
-          {data && data?.length > 0 ? (
+          {!isLoading && !isPending ? (
             <>
-              {listType === "grid" ? (
+              {data && data?.length > 0 ? (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    {data?.map((car) => (
-                      <CarItem key={car?.id} car={car} />
-                    ))}
-                  </div>
+                  {listType === "grid" ? (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        {data?.map((car) => (
+                          <CarItem key={car?.id} car={car} />
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex flex-col gap-5">
+                        {data?.map((car) => (
+                          <CarItemList key={car?.id} car={car} />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </>
               ) : (
                 <>
-                  <div className="flex flex-col gap-5">
-                    {data?.map((car) => (
-                      <CarItemList key={car?.id} car={car} />
-                    ))}
-                  </div>
+                  <EmptyState
+                    message="Tidak ada Mobil yang tersedia. <br> Silakan Menunggu Waktu Lelang Selanjutnya !"
+                    isUseSearch={false}
+                  />
                 </>
               )}
             </>
           ) : (
             <>
-              <EmptyState
-                message="Tidak ada Mobil yang tersedia. <br> Silakan Menunggu Waktu Lelang Selanjutnya !"
-                isUseSearch={false}
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+                <CarItemSkeleton />
+                <CarItemSkeleton />
+                <CarItemSkeleton />
+                <CarItemSkeleton />
+              </div>
             </>
           )}
         </div>

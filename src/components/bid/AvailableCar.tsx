@@ -14,6 +14,7 @@ import { FilterBrand } from "./FilterBrand";
 import CarItem from "../car/CarItem";
 import EmptyState from "../state/EmptyState";
 import CarItemList from "../car/CarItemList";
+import CarItemSkeleton from "../car/CarItemSkeleton";
 
 export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
   const { token } = useAuth();
@@ -31,7 +32,7 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
     handleDefectStatusChange,
   } = usePagination();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isPending } = useQuery({
     queryKey: [
       "available-cars",
       token,
@@ -81,7 +82,7 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
                 className="bg-red-800 hover:bg-red-900 font-bold"
                 disabled={isLoading}
               >
-                {isLoading ? (
+                {isLoading && isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
                   <Icon icon="bx:search" />
@@ -129,32 +130,45 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
         </div>
       </div>
 
-      {data?.data && data?.data?.total > 0 ? (
+      {!isLoading && !isPending ? (
         <>
-          {listType === "grid" ? (
+          {data?.data && data?.data?.total > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-                {data?.data?.data?.map((car) => (
-                  <CarItem key={car?.id} car={car} />
-                ))}
-              </div>
+              {listType === "grid" ? (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+                    {data?.data?.data?.map((car) => (
+                      <CarItem key={car?.id} car={car} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-5">
+                    {data?.data?.data?.map((car) => (
+                      <CarItemList key={car?.id} car={car} />
+                    ))}
+                  </div>
+                </>
+              )}
             </>
           ) : (
             <>
-              <div className="flex flex-col gap-5">
-                {data?.data?.data?.map((car) => (
-                  <CarItemList key={car?.id} car={car} />
-                ))}
-              </div>
+              <EmptyState
+                message="Tidak ada Mobil yang tersedia. <br> Silakan Menunggu Waktu Lelang Selanjutnya !"
+                isUseSearch={isFavorite}
+              />
             </>
           )}
         </>
       ) : (
         <>
-          <EmptyState
-            message="Tidak ada Mobil yang tersedia. <br> Silakan Menunggu Waktu Lelang Selanjutnya !"
-            isUseSearch={isFavorite}
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+            <CarItemSkeleton />
+            <CarItemSkeleton />
+            <CarItemSkeleton />
+            <CarItemSkeleton />
+          </div>
         </>
       )}
     </div>
