@@ -24,7 +24,7 @@ export default function CarItemList({ car }: { car: ICarResponse }) {
         <div className="flex flex-row">
           <div className="flex-[40%]">
             <div className="relative">
-              <div className="relative w-full h-[150px] md:h-[300px]">
+              <div className="relative w-full h-[130px] md:h-[300px]">
                 <Image
                   src={
                     car?.car_images && car?.car_images?.length > 0

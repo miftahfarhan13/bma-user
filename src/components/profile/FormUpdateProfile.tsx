@@ -98,7 +98,7 @@ export default function FormUpdateProfile() {
           {({ errors, touched }) => (
             <Form className="flex flex-col gap-5">
               <div className="flex flex-col-reverse md:flex-row items-center gap-5">
-                <div className="flex flex-col gap-4 flex-1">
+                <div className="flex flex-col gap-4 flex-1 w-full">
                   <InputField
                     name="name"
                     label="Nama"
