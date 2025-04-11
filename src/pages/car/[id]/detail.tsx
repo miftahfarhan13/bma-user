@@ -43,10 +43,21 @@ export default function CarDetailPage({
     enabled: !!token,
   });
 
-  const isBiddingEnd =
-    !biddingTime?.current_bidding_time?.end_time ||
-    moment(biddingTime?.server_time) > moment(data?.session_time_end) ||
-    data?.winner_id;
+  const serverTime = moment(biddingTime?.server_time);
+  const dateAuctionStart = moment(data?.session_time_start);
+  const dateAuctionEnd = moment(data?.session_time_end).add(3, "seconds");
+
+  const isAuctionEnd = serverTime.isAfter(dateAuctionEnd) || !!data?.winner_id;
+
+  const isAuctionNotStart =
+    !biddingTime?.current_bidding_time
+
+  const isAuctionActive =
+    biddingTime?.current_bidding_time &&
+    !isAuctionEnd &&
+    serverTime.isSameOrAfter(dateAuctionStart) &&
+    serverTime.isSameOrBefore(dateAuctionEnd) &&
+    !data?.winner_id;
 
   return (
     <>
@@ -60,13 +71,13 @@ export default function CarDetailPage({
           <>
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-1">
-                {isBiddingEnd ? (
+                {!isAuctionActive ? (
                   <div className="bg-red-900 text-center text-white font-bold py-1">
                     Lelang Telah Berakhir
                   </div>
                 ) : (
                   <>
-                    {data?.session_time_end && (
+                    {isAuctionActive && data?.session_time_end && (
                       <AuctionCountdown
                         label={
                           biddingTime?.current_bidding_time?.end_time
@@ -74,13 +85,24 @@ export default function CarDetailPage({
                             : "Lelang selanjutnya dimulai dalam: "
                         }
                         serverTime={biddingTime?.server_time}
-                        endTime={data?.session_time_end}
+                        endTime={
+                          biddingTime?.current_bidding_time?.end_time
+                            ? data?.session_time_end
+                            : biddingTime?.next_bidding_time?.start_time
+                        }
                       />
                     )}
                   </>
                 )}
               </div>
-              <DetailCar id={id} data={data as ICarResponse} />
+              <DetailCar
+                id={id}
+                data={data as ICarResponse}
+                biddingTime={biddingTime}
+                isAuctionEnd={isAuctionEnd}
+                isAuctionNotStart={isAuctionNotStart}
+                isAuctionActive={isAuctionActive}
+              />
             </div>
           </>
         ) : (

@@ -97,7 +97,7 @@ export interface ICarResponse {
     }
   ];
   car_images: [{ id: number; img_path: string }];
-  car_document: ICarDocument;
+  car_documents?: ICarDocument[];
   car_defects_interior?: ICarDefect[];
   car_defects_eksterior?: ICarDefect[];
   car_defects_others?: ICarDefect[];

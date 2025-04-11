@@ -19,13 +19,13 @@ export default function ShortcutHome() {
               <p>Menang</p>
             </div>
           </Link>
-          <Link href="/garage?status=Menang">
+          <Link href="/garage?status=Kalah">
             <div className="flex flex-col gap-2 text-red-900 hover:text-red-600 items-center">
               <Icon icon="fa6-solid:ban" className="w-5 md:w-10 h-5 md:h-10" />
               <p>Kalah</p>
             </div>
           </Link>
-          <Link href="/garage?status=Menang">
+          <Link href="/garage?status=Terjual">
             <div className="flex flex-col gap-2 text-red-900 hover:text-red-600 items-center">
               <Icon
                 icon="fa6-solid:flag-checkered"

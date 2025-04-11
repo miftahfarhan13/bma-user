@@ -11,6 +11,7 @@ type ICarParams = IPaginationParams & {
   defectStatus?: string[];
   brandName?: string | string[];
   isFavorite?: string;
+  status?: string;
 };
 
 export const getCars = async (

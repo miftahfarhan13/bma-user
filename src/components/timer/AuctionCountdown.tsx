@@ -42,7 +42,9 @@ export const AuctionCountdown = ({
             window.location.reload();
             return (
               <div className="bg-red-900 text-center text-white font-bold py-1">
-                Lelang Telah Berakhir
+                {label === "Lelang selanjutnya dimulai dalam: "
+                  ? ""
+                  : "Lelang Telah Berakhir"}
               </div>
             );
           }

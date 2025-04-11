@@ -15,9 +15,12 @@ import CarItem from "../car/CarItem";
 import EmptyState from "../state/EmptyState";
 import CarItemList from "../car/CarItemList";
 import CarItemSkeleton from "../car/CarItemSkeleton";
+import { useRouter } from "next/router";
 
 export default function GarageCar() {
+  const router = useRouter();
   const { token } = useAuth();
+  const queryStatus = router.query.status?.toString();
   const [listType, setListType] = useState("grid");
 
   const {
@@ -41,6 +44,7 @@ export default function GarageCar() {
       sort,
       brandName,
       defectStatus,
+      queryStatus,
     ],
     queryFn: () =>
       getGarageCars({
@@ -50,6 +54,7 @@ export default function GarageCar() {
         orderBy,
         brandName,
         defectStatus,
+        status: queryStatus,
       }),
     refetchOnWindowFocus: false,
     enabled: !!token,

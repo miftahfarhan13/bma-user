@@ -15,34 +15,53 @@ import CarDamages from "./CarDamages";
 import dynamic from "next/dynamic";
 import ReactPlayer from "react-player";
 import { ICarResponse } from "@/types/car";
+import { useAuth } from "@/utils/context/AuthProvider";
+import { IBiddingTimeResponse } from "@/types/biddingTime";
 
 const Gallery = dynamic(() => import("../layout/Gallery"), { ssr: false });
 
 export default function DetailCar({
   data,
   id,
+  biddingTime,
+  isAuctionEnd,
+  isAuctionNotStart,
+  isAuctionActive,
 }: {
   data: ICarResponse;
   id: string;
+  biddingTime: IBiddingTimeResponse;
+  isAuctionEnd: boolean;
+  isAuctionNotStart: boolean;
+  isAuctionActive: boolean;
 }) {
+  const { user } = useAuth();
+
   const { handleToggleFavorite } = useToggleFavorite({ id });
 
+  const carDocument =
+    data?.car_documents && data?.car_documents?.length > 0
+      ? data?.car_documents[0]
+      : undefined;
+
   const documentImages = [
-    { url: data?.car_document?.bpkb_pict, label: "BPKB" },
-    { url: data?.car_document?.stnk_pict, label: "STNK" },
-    { url: data?.car_document?.invoice_pict, label: "Faktur" },
-    { url: data?.car_document?.vin_pict, label: "NIK/VIN" },
-    { url: data?.car_document?.form_a_pict, label: "Form A (CBU)" },
-    { url: data?.car_document?.stnk_fotocopy_pict, label: "FC an STNK" },
-    { url: data?.car_document?.manual_book_pict, label: "Buku Manual" },
-    { url: data?.car_document?.service_book_pict, label: "Buku Servis" },
-    { url: data?.car_document?.backup_key_pict, label: "Kunci Cadangan" },
-    { url: data?.car_document?.receipt_form_pict, label: "Blanko Kwitansi" },
-    { url: data?.car_document?.declaration_right_pict, label: "SPH" },
-    { url: data?.car_document?.toolkit_pict, label: "Toolkits" },
+    { url: carDocument?.bpkb_pict, label: "BPKB" },
+    { url: carDocument?.stnk_pict, label: "STNK" },
+    { url: carDocument?.invoice_pict, label: "Faktur" },
+    { url: carDocument?.vin_pict, label: "NIK/VIN" },
+    { url: carDocument?.form_a_pict, label: "Form A (CBU)" },
+    { url: carDocument?.stnk_fotocopy_pict, label: "FC an STNK" },
+    { url: carDocument?.manual_book_pict, label: "Buku Manual" },
+    { url: carDocument?.service_book_pict, label: "Buku Servis" },
+    { url: carDocument?.backup_key_pict, label: "Kunci Cadangan" },
+    { url: carDocument?.receipt_form_pict, label: "Blanko Kwitansi" },
+    { url: carDocument?.declaration_right_pict, label: "SPH" },
+    { url: carDocument?.toolkit_pict, label: "Toolkits" },
   ].filter((item) => item.url);
 
   const video = data?.car_videos?.filter((item) => item?.video_file);
+
+  const isWinner = data?.winner_id === user?.id;
 
   return (
     <div className="flex flex-col gap-5">
@@ -95,6 +114,50 @@ export default function DetailCar({
               )}
             </div>
           </div>
+          {isAuctionEnd && data?.winner_id ? (
+            <div className="flex items-center justify-center w-full px-5 py-10 text-white border rounded-lg gap-x-10 gap-y-5 border-red-800 bg-red-800 md:py-16">
+              {isWinner ? (
+                <>
+                  <Icon icon="heroicons:check-badge" className="w-12 h-12" />
+                  <div className="text-2xl font-black">
+                    Selamat!
+                    <br />
+                    Anda Menang
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:x-circle" className="w-12 h-12" />
+                  <div className="text-2xl font-black">
+                    Mohon Maaf!
+                    <br />
+                    Anda Kalah
+                  </div>
+                </>
+              )}
+            </div>
+          ) : isAuctionNotStart ? (
+            <>
+              <div className="flex flex-col items-center justify-center w-full px-5 py-10 text-center bg-gray-100 rounded-lg gap-y-5 md:py-16">
+                <Icon icon="heroicons:clock" className="w-12 h-12" />
+                <div className="text-lg">
+                  <div className="font-bold">Suka Mobil Ini?</div>
+                  <div className="">
+                    Jadikan favorit dan nantikan sesi penawaran kami berikutnya
+                    pada
+                  </div>
+                  <div className="font-bold text-auc-primary-dark">
+                    {moment(biddingTime?.next_bidding_time?.start_time).format(
+                      "dddd DD MMMM YYYY, HH:mm"
+                    )}{" "}
+                    WIB
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : isAuctionActive ? (
+            <>active</>
+          ) : null}
         </div>
       </div>
       <p className="text-base md:text-2xl font-bold">Informasi Mobil</p>
@@ -193,7 +256,7 @@ export default function DetailCar({
         </TabsList>
         <TabsContent value="document" className="py-5">
           <div className="flex flex-col gap-5">
-            <CarChecklistDocument carDocument={data?.car_document} />
+            <CarChecklistDocument carDocument={carDocument} />
             <Gallery images={documentImages || []} />
           </div>
         </TabsContent>

@@ -19,7 +19,7 @@ export default function BidTimer({
           serverTime={biddingTime?.server_time}
           endTime={
             biddingTime?.current_bidding_time?.end_time ||
-            biddingTime?.next_bidding_time?.end_time
+            biddingTime?.next_bidding_time?.start_time
           }
         />
       )}

@@ -8,8 +8,20 @@ export interface IBiddingTime {
 }
 
 export type IBiddingTimeResponse = {
-  current_bidding_time: { bidding_time: IBiddingTime; end_time: string };
-  next_bidding_time: { bidding_time: IBiddingTime; end_time: string };
-  previous_bidding_time: { bidding_time: IBiddingTime; end_time: string };
+  current_bidding_time: {
+    bidding_time: IBiddingTime;
+    start_time: string;
+    end_time: string;
+  };
+  next_bidding_time: {
+    bidding_time: IBiddingTime;
+    start_time: string;
+    end_time: string;
+  };
+  previous_bidding_time: {
+    bidding_time: IBiddingTime;
+    start_time: string;
+    end_time: string;
+  };
   server_time: string;
 };
