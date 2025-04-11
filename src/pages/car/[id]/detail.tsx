@@ -1,4 +1,5 @@
 import DetailCar from "@/components/car/DetailCar";
+import DetailCarSkeleton from "@/components/car/DetailCarSkeleton";
 import Container from "@/components/layout/Container";
 import Header from "@/components/layout/Header";
 import Navbar from "@/components/layout/Navbar";
@@ -83,7 +84,9 @@ export default function CarDetailPage({
             </div>
           </>
         ) : (
-          <></>
+          <>
+            <DetailCarSkeleton />
+          </>
         )}
       </Container>
     </>
