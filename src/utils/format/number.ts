@@ -21,3 +21,9 @@ export const formatNumber = (
 
   return new Intl.NumberFormat(locale, options).format(number);
 };
+
+export function formatCurrencyInput(value: string | number): string {
+  const number = typeof value === "string" ? value.replace(/\D/g, "") : value;
+  const formatter = new Intl.NumberFormat("id-ID");
+  return formatter.format(Number(number));
+}

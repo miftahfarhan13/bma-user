@@ -4,7 +4,7 @@ import { mapQueryString } from "@/utils/format/string";
 import { axiosClient } from "./apiClient";
 
 export const getBrands = async (
-  params?: IPaginationParams
+  params: IPaginationParams = {}
 ): Promise<IBrandResponse[]> => {
   const queryString = mapQueryString(params);
   const response = await axiosClient.get(

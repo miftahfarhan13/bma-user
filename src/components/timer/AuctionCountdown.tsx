@@ -1,6 +1,7 @@
 import Countdown from "react-countdown";
 import moment from "moment";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { playSound } from "@/utils/function/sound";
 
 interface AuctionCountdownProps {
   label: string;
@@ -14,7 +15,6 @@ export const AuctionCountdown = ({
   endTime,
 }: AuctionCountdownProps) => {
   const [countdownTarget, setCountdownTarget] = useState<Date | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const clientNow = moment();
@@ -35,11 +35,12 @@ export const AuctionCountdown = ({
           const totalSeconds = hours * 3600 + minutes * 60 + seconds;
 
           if (totalSeconds === 60) {
-            audioRef.current?.play();
+            playSound("audio-alert-1-minute");
           }
 
           if (completed) {
             window.location.reload();
+            playSound("audio-bid-over");
             return (
               <div className="bg-red-900 text-center text-white font-bold py-1">
                 {label === "Lelang selanjutnya dimulai dalam: "
@@ -59,7 +60,6 @@ export const AuctionCountdown = ({
           );
         }}
       />
-      <audio ref={audioRef} src="/sounds/alert-1minute.mp3" preload="auto" />
     </>
   );
 };

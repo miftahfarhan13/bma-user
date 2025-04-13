@@ -4,7 +4,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
 }
 
-const BidIcon: React.FC<IconProps> = (props) => {
+const IconBid: React.FC<IconProps> = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -38,4 +38,4 @@ const BidIcon: React.FC<IconProps> = (props) => {
   );
 };
 
-export default BidIcon;
+export default IconBid;

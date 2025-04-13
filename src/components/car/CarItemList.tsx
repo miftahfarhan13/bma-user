@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import moment from "moment";
-import BidIcon from "@/icons/BidIcon";
+import IconBid from "@/icons/IconBid";
 import IconUsers from "@/icons/IconUsers";
 import IconPlate from "@/icons/IconPlate";
 import IconNIK from "@/icons/IconNIK";
@@ -139,7 +139,7 @@ export default function CarItemList({
           <div className="flex justify-center py-1 text-white">
             <div className="flex flex-row gap-5">
               <div className="flex flex-row gap-2">
-                <BidIcon fill="white" style={{ width: "20px" }} />
+                <IconBid fill="white" style={{ width: "20px" }} />
                 <p className="font-bold text-lg">{car?.bids_count}</p>
               </div>
               <div className="flex flex-row gap-2">

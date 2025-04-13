@@ -21,7 +21,7 @@ export default function Gallery({
   images: Array<{ url: string | undefined; label: string }>;
 }) {
   const onInit = () => {
-    console.log("lightGallery has been initialized");
+    // console.log("lightGallery has been initialized");
   };
   return (
     <>

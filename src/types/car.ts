@@ -102,6 +102,15 @@ export interface ICarResponse {
   car_defects_eksterior?: ICarDefect[];
   car_defects_others?: ICarDefect[];
   car_videos?: ICarVideos[];
+  bid_lock: {
+    id: number;
+    car_id: number;
+    user_id: number;
+    amount: number;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string;
+  };
 }
 
 export type ICarPaginationResponse = {
