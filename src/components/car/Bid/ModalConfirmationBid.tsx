@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ICarResponse } from "@/types/car";
-import { useBid } from "@/utils/context/BidProvider";
 import { formatCurrency } from "@/utils/format/number";
 import usePlaceBid from "@/utils/hooks/usePlaceBid";
 import Image from "next/image";
@@ -16,13 +15,16 @@ import { useState } from "react";
 export function ModalConfirmationBid({
   car,
   amount,
+  createdPrice,
+  className,
 }: {
   car: ICarResponse;
   amount: number;
+  createdPrice: number;
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const { mutationPlaceBid, handlePlaceBid } = usePlaceBid();
-  const { createdPrice } = useBid();
   const totalPrice = (createdPrice || 0) + amount;
 
   const handleSubmit = async () => {
@@ -34,7 +36,7 @@ export function ModalConfirmationBid({
     <>
       <Button
         onClick={() => setOpen(true)}
-        className="w-full text-sm font-bold text-white bg-yellow-600 hover:bg-yellow-700 rounded-lg hover:bg-auc-secondary sm:text-lg md:px-5 md:text-xl h-[44px]"
+        className={`${className} w-full cursor-pointer text-sm font-bold text-white bg-yellow-600 hover:bg-yellow-700 rounded-lg hover:bg-auc-secondary`}
       >
         + {formatCurrency(amount)}
       </Button>

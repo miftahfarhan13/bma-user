@@ -6,6 +6,8 @@ import type { AppProps } from "next/app";
 import { Figtree } from "next/font/google";
 import { Toaster } from "sonner";
 import "moment/locale/id";
+import NotifyEvent from "@/components/car/Bid/NotifyEvent";
+import useEcho from "@/utils/hooks/useEcho";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -15,11 +17,13 @@ const figtree = Figtree({
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
+  useEcho();
   return (
     <main className={figtree.className}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <Toaster richColors />
+          <NotifyEvent />
           <Component {...pageProps} />
         </AuthProvider>
       </QueryClientProvider>

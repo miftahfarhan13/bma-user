@@ -20,7 +20,6 @@ import DetailCarLiveBid from "./DetailCarLiveBid";
 import { useBid } from "@/utils/context/BidProvider";
 import { AuctionCountdown } from "../timer/AuctionCountdown";
 import { IBiddingTimeResponse } from "@/types/biddingTime";
-import NotifyEvent from "./Bid/NotifyEvent";
 
 const Gallery = dynamic(() => import("../layout/Gallery"), { ssr: false });
 
@@ -219,7 +218,6 @@ export default function DetailCar({
               </>
             ) : isAuctionActive ? (
               <>
-                <NotifyEvent />
                 <DetailCarLiveBid car={data} />
               </>
             ) : (

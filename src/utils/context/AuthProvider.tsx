@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<IUserResponse | null>(null);
   const [hasLoggedOut, setHasLoggedOut] = useState(false);
 
-  const { data, error, isPending, isFetching } = useQuery({
+  const { data, error, isPending, isFetching, isSuccess, isError } = useQuery({
     queryKey: ["profile", token],
     queryFn: getMe,
     enabled: !!token,
@@ -43,6 +43,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [data]);
 
+  const isLoaded = !token || isSuccess || isError;
+
   return (
     <AuthContext.Provider
       value={{
@@ -52,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         token: token || "",
       }}
     >
-      {children}
+      {isLoaded ? children : <div>Loading...</div>}
     </AuthContext.Provider>
   );
 };

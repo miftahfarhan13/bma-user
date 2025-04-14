@@ -1,39 +1,95 @@
 import { ICarResponse } from "@/types/car";
 import { formatCurrency, formatNumber } from "@/utils/format/number";
 import Image from "next/image";
-import React from "react";
-import { Badge } from "../ui/badge";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import moment from "moment";
 import IconUsers from "@/icons/IconUsers";
 import IconPlate from "@/icons/IconPlate";
 import IconNIK from "@/icons/IconNIK";
 import IconTax from "@/icons/IconTax";
-import BadgeDefectStatus from "./BadgeDefectStatus";
 import useToggleFavorite from "@/utils/hooks/useToggleFavorite";
-import { useAuth } from "@/utils/context/AuthProvider";
-import { IBid } from "@/types/bid";
-import HideCarCountdown from "./HideCarCountdown";
-import WinnerCarStatus from "./WinnerCarStatus";
+import { BidEventPayload, IBid, IBidLiveResponse } from "@/types/bid";
 import IconBid from "@/icons/IconBid";
+import HideCarCountdown from "../HideCarCountdown";
+import BadgeDefectStatus from "../BadgeDefectStatus";
+import { Badge } from "@/components/ui/badge";
+import { ModalConfirmationBid } from "./ModalConfirmationBid";
+import FormMaxBid from "./FormMaxBid";
 
-export default function CarItem({
+export default function CarItemBid({
+  userId,
   car,
   bid,
 }: {
+  userId: number;
   car: ICarResponse;
   bid?: IBid;
 }) {
-  const { user } = useAuth();
   const { handleToggleFavorite } = useToggleFavorite({
     id: car?.id.toString(),
   });
 
-  const isWinner = car?.winner_id === user?.id;
+  const [sessionTimeEnd, setSessionTimeEnd] = useState<string | undefined>("");
+  const [createdPrice, setCreatedPrice] = useState<number | undefined>(
+    undefined
+  );
+  const [bidCount, setBidCount] = useState<number | undefined>(undefined);
+  const [bidUserCount, setBidUserCount] = useState<number | undefined>(
+    undefined
+  );
+  const [isCurrentlyWin, setIsCurrentlyWin] = useState(false);
+
   const isSold = car?.status === "Terjual";
+
+  useEffect(() => {
+    setCreatedPrice(car?.created_price || car?.price);
+    setBidCount(car?.bids_count);
+    setBidUserCount(car?.unique_user_bids_count);
+    setSessionTimeEnd(car?.session_time_end);
+    if (car?.bids && car?.bids?.length > 0) {
+      const isWin = car?.bids[0]?.user_id === userId;
+      setIsCurrentlyWin(isWin);
+    } else {
+      setIsCurrentlyWin(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [car, car?.id]);
+
+  console.log(sessionTimeEnd);
+
+  const urlDetail = `/car/${car?.id}/detail`;
+
+  useEffect(() => {
+    const channelName = "bid.place";
+    const channel = window.Echo.channel(channelName);
+
+    const handleBidEvent = async (e: BidEventPayload) => {
+      const liveCar: IBidLiveResponse | undefined = e.data[car?.id ?? -1];
+      if (!liveCar) return;
+
+      setCreatedPrice(liveCar.price);
+      setBidCount(liveCar["bid-count"]);
+      setBidUserCount(liveCar["bid-user-count"]);
+      setSessionTimeEnd(liveCar.session_time_end);
+
+      const bid = liveCar[`bid-place-1`];
+
+      setIsCurrentlyWin(bid.user === userId);
+    };
+
+    channel.listen("BidEvent", handleBidEvent);
+
+    return () => {
+      window.Echo.leave(channelName);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <a href={`/car/${car?.id}/detail`}>
-      <div className="shadow rounded-xl">
+    <div className="shadow rounded-xl cursor-pointer">
+      <a href={urlDetail}>
         <div className="relative">
           <div className="relative w-full h-[280px] sm:h-[300px] md:h-[260px] xl:h-[260px]">
             <Image
@@ -51,39 +107,53 @@ export default function CarItem({
           <div className="absolute bottom-2 left-2 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">
             {car?.id}
           </div>
-          {car?.winner_id && (
-            <WinnerCarStatus isWinner={isWinner} isSold={isSold} />
+          {isCurrentlyWin ? (
+            <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl rounded-tr-xl bg-green-300/90 px-10 py-2 text-sm text-gray-800">
+              <Icon
+                icon={isSold ? "fa6-solid:flag-checkered" : "fa6-solid:award"}
+              />
+              Sedang Unggul
+            </div>
+          ) : (
+            <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl rounded-tr-xl bg-red-300/90 px-10 py-2 text-sm text-gray-800">
+              <Icon icon="fa-solid:ban" />
+              Sedang Kalah
+            </div>
           )}
           {bid && <HideCarCountdown bid={bid} />}
         </div>
-        <div className="flex flex-col gap-2.5 p-2.5">
-          <div className="flex flex-row items-start gap-2.5 justify-between">
+      </a>
+      <div className="flex flex-col gap-2.5 p-2.5">
+        <div className="flex flex-row items-start gap-2.5 justify-between">
+          <a href={urlDetail}>
             <div className="flex flex-col">
               <p className="font-bold text-red-900">
-                {formatCurrency(car?.created_price || car?.price)}
+                {formatCurrency(createdPrice || 0)}
               </p>
               <p className="font-bold">
                 {car?.brand?.brand_name} {car?.car_name}
               </p>
             </div>
-            <div
-              className="cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                handleToggleFavorite();
-              }}
-            >
-              <Icon
-                icon={
-                  car?.is_favorite
-                    ? "fa6-solid:thumbs-up"
-                    : "fa6-regular:thumbs-up"
-                }
-                className="text-2xl text-red-900"
-              />
-            </div>
+          </a>
+          <div
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleToggleFavorite();
+            }}
+          >
+            <Icon
+              icon={
+                car?.is_favorite
+                  ? "fa6-solid:thumbs-up"
+                  : "fa6-regular:thumbs-up"
+              }
+              className="text-2xl text-red-900"
+            />
           </div>
+        </div>
+        <a href={urlDetail}>
           <div className="flex flex-row items-center justify-between gap-1">
             <Badge variant="secondary">{car?.car_availability}</Badge>
 
@@ -99,6 +169,8 @@ export default function CarItem({
               )}
             </div>
           </div>
+        </a>
+        <a href={urlDetail}>
           <div className="border border-gray-200 p-2.5 rounded-xl">
             <div className="grid grid-cols-2 gap-2.5">
               <div className="flex flex-col gap-0">
@@ -147,24 +219,41 @@ export default function CarItem({
               </div>
             </div>
           </div>
+        </a>
+
+        <div className="grid grid-cols-2 gap-2.5">
+          <ModalConfirmationBid
+            car={car}
+            amount={500000}
+            createdPrice={createdPrice || 0}
+            className="text-xs"
+          />
+          <ModalConfirmationBid
+            car={car}
+            amount={1000000}
+            createdPrice={createdPrice || 0}
+            className="text-xs"
+          />
         </div>
+
+        <FormMaxBid car={car} createdPrice={createdPrice || 0} type="list" />
+      </div>
+      <a href={urlDetail}>
         <div className="bg-red-900 rounded-b-xl">
           <div className="flex justify-center py-1 text-white">
             <div className="flex flex-row gap-5">
               <div className="flex flex-row gap-2">
                 <IconBid fill="white" style={{ width: "20px" }} />
-                <p className="font-bold text-lg">{car?.bids_count}</p>
+                <p className="font-bold text-lg">{bidCount}</p>
               </div>
               <div className="flex flex-row gap-2">
                 <IconUsers fill="white" style={{ width: "20px" }} />
-                <p className="font-bold text-lg">
-                  {car?.unique_user_bids_count}
-                </p>
+                <p className="font-bold text-lg">{bidUserCount}</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
   );
 }

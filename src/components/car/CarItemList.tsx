@@ -9,7 +9,6 @@ import IconUsers from "@/icons/IconUsers";
 import IconPlate from "@/icons/IconPlate";
 import IconNIK from "@/icons/IconNIK";
 import IconTax from "@/icons/IconTax";
-import Link from "next/link";
 import BadgeDefectStatus from "./BadgeDefectStatus";
 import useToggleFavorite from "@/utils/hooks/useToggleFavorite";
 import { IBid } from "@/types/bid";
@@ -32,7 +31,7 @@ export default function CarItemList({
   const isWinner = car?.winner_id === user?.id;
   const isSold = car?.status === "Terjual";
   return (
-    <Link href={`/car/${car?.id}/detail`}>
+    <a href={`/car/${car?.id}/detail`}>
       <div className="shadow rounded-xl">
         <div className="flex flex-row">
           <div className="flex-[40%]">
@@ -152,6 +151,6 @@ export default function CarItemList({
           </div>
         </div>
       </div>
-    </Link>
+    </a>
   );
 }

@@ -84,16 +84,12 @@ export interface ICarResponse {
     updated_at: string;
     deleted_at: string;
   };
-  bid: [
+  bids: [
     {
       id: number;
       car_id: number;
       amount: number;
       user_id: number;
-      user: {
-        id: number;
-        name: string;
-      };
     }
   ];
   car_images: [{ id: number; img_path: string }];

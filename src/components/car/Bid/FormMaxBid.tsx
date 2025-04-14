@@ -12,13 +12,20 @@ import {
 } from "@/components/ui/dialog";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useBid } from "@/utils/context/BidProvider";
 import { formatCurrency, formatCurrencyInput } from "@/utils/format/number";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
-export default function FormMaxBid({ car }: { car: ICarResponse }) {
-  const { createdPrice } = useBid();
+export default function FormMaxBid({
+  car,
+  createdPrice,
+  type,
+}: {
+  car: ICarResponse;
+  createdPrice: number;
+  type: string;
+}) {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const { handlePlaceLockBid, mutationPlaceLockBid } = usePlaceBid();
@@ -48,39 +55,69 @@ export default function FormMaxBid({ car }: { car: ICarResponse }) {
     }
   };
 
+  useEffect(() => {
+    if (type === "detail" || car?.bid_lock?.amount) {
+      setIsFormOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
+
   return (
     <>
-      <div className="flex flex-row gap-2.5 w-full items-start">
-        <div className="flex flex-row w-full">
-          <div className="flex items-center bg-gray-200 px-2.5 rounded-l-md">
-            Rp
-          </div>
-          <Input
-            className="rounded-l-none"
-            placeholder="Masukkan Penawaran..."
-            name="amount"
-            type="text"
-            value={formatCurrencyInput(amount || "")}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/\D/g, "");
-              setAmount(Number(raw));
-            }}
-          />
-        </div>
+      {isFormOpen ? (
+        <>
+          <div className="flex flex-row gap-2.5 w-full items-start">
+            <div className="flex flex-row w-full">
+              <div className="flex items-center bg-gray-200 px-2.5 rounded-l-md">
+                Rp
+              </div>
+              <Input
+                className="rounded-l-none h-[38px]"
+                placeholder="Masukkan Penawaran..."
+                name="amount"
+                type="text"
+                value={formatCurrencyInput(amount || "")}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "");
+                  setAmount(Number(raw));
+                }}
+              />
+            </div>
 
-        <Button
-          className="border-2 border-red-800 text-[1rem] bg-red-800 hover:bg-red-900 text-white w-[40%] h-[38px]"
-          disabled={mutationPlaceLockBid.isPending}
-          onClick={handleSubmit}
-        >
-          {mutationPlaceLockBid.isPending ? (
-            <Loader2 className="animate-spin" />
-          ) : (
-            <Icon icon="fa6-solid:money-bill" className="text-[1rem]" />
-          )}
-          <span className="hidden sm:block">Masukkan</span>
-        </Button>
-      </div>
+            <Button
+              className={`border-2 border-red-800 text-[1rem] bg-red-800 hover:bg-red-900 text-white ${
+                type === "detail" && "w-[40%]"
+              } h-[38px]`}
+              disabled={mutationPlaceLockBid.isPending}
+              onClick={handleSubmit}
+            >
+              {mutationPlaceLockBid.isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <Icon icon="fa6-solid:money-bill" className="text-[1rem]" />
+              )}
+              {type === "detail" && (
+                <span className="hidden sm:block">Masukkan</span>
+              )}
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            className="text-gray-500 text-sm h-[38px] flex justify-center items-center"
+            onClick={() => setIsFormOpen(true)}
+          >
+            Klik untuk penawaran maksimum
+            <Icon
+              icon="fa:chevron-down"
+              className="ml-2"
+              width={10}
+              height={10}
+            />
+          </div>
+        </>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[500px]">

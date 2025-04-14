@@ -38,7 +38,7 @@ export default function CarDetailPage({
   const { data, isLoading, isPending } = useQuery({
     queryKey: ["car", token],
     queryFn: () => getCarById(id),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     enabled: !!token,
   });
 

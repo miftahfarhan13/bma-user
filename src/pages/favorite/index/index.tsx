@@ -1,4 +1,4 @@
-import AvaiableCar from "@/components/bid/AvailableCar";
+import FavoriteCar from "@/components/bid/FavoriteCar";
 import BottomNavigationMobile from "@/components/layout/BottomNavigationMobile";
 import Container from "@/components/layout/Container";
 import Header from "@/components/layout/Header";
@@ -47,10 +47,18 @@ export default function FavoritePage({
             )}
             <BidTimer biddingTime={biddingTime} />
           </div>
-          <AvaiableCar isFavorite />
+          <FavoriteCar isFavorite />
         </div>
       </Container>
       <BottomNavigationMobile />
+      <audio src="/sounds/bid-1.mp3" preload="auto" id="audio-bid-1" />
+      <audio src="/sounds/bid-2.mp3" preload="auto" id="audio-bid-2" />
+      <audio
+        src="/sounds/alert-1minute.mp3"
+        preload="auto"
+        id="audio-alert-1-minute"
+      />
+      <audio src="/sounds/bid-over.mp3" preload="auto" id="audio-bid-over" />
     </>
   );
 }

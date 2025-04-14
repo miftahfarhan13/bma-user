@@ -10,13 +10,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getBidsByCarId } from "@/service/bid";
 import { BidEventPayload, IBid, IBidLiveResponse } from "@/types/bid";
 import { ModalConfirmationBid } from "./Bid/ModalConfirmationBid";
-import useEcho from "@/utils/hooks/useEcho";
 import FormMaxBid from "./Bid/FormMaxBid";
 
 export default function DetailCarLiveBid({ car }: { car: ICarResponse }) {
-  useEcho();
   const { user, token } = useAuth();
   const {
+    createdPrice,
     bidCount,
     bidUserCount,
     bids,
@@ -27,10 +26,10 @@ export default function DetailCarLiveBid({ car }: { car: ICarResponse }) {
     setSessionTimeEnd,
   } = useBid();
   const { data, isLoading, isPending } = useQuery({
-    queryKey: ["bids-by-car", token],
+    queryKey: ["bids-by-car", token, car],
     queryFn: () => getBidsByCarId(car?.id),
     enabled: !!token,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   useEffect(() => {
@@ -49,35 +48,36 @@ export default function DetailCarLiveBid({ car }: { car: ICarResponse }) {
   }, [data, isLoading, isPending]);
 
   useEffect(() => {
-    window.Echo.channel("bid.place").listen(
-      "BidEvent",
-      async (e: BidEventPayload) => {
-        const liveCar: IBidLiveResponse | undefined = e.data[car?.id ?? -1];
-        if (!liveCar) return;
+    const channelName = "bid.place";
+    const channel = window.Echo.channel(channelName);
 
-        console.log(liveCar)
+    const handleBidEvent = async (e: BidEventPayload) => {
+      const liveCar: IBidLiveResponse | undefined = e.data[car?.id ?? -1];
+      if (!liveCar) return;
 
-        setCreatedPrice(liveCar.price);
-        setBidCount(liveCar["bid-count"]);
-        setBidUserCount(liveCar["bid-user-count"]);
-        setSessionTimeEnd(liveCar.session_time_end);
+      setCreatedPrice(liveCar.price);
+      setBidCount(liveCar["bid-count"]);
+      setBidUserCount(liveCar["bid-user-count"]);
+      setSessionTimeEnd(liveCar.session_time_end);
 
-        const currentBids: IBid[] = [];
-        for (let i = 1; i <= 3; i++) {
-          const bid = liveCar[`bid-place-${i}`];
-          currentBids.push({
-            amount: bid?.amount ?? undefined,
-            user_id: bid?.user ?? undefined,
-          });
-        }
-
-        setBids(currentBids);
+      const currentBids: IBid[] = [];
+      for (let i = 1; i <= 3; i++) {
+        const bid = liveCar[`bid-place-${i}`];
+        currentBids.push({
+          amount: bid?.amount ?? undefined,
+          user_id: bid?.user ?? undefined,
+        });
       }
-    );
+
+      setBids(currentBids);
+    };
+
+    channel.listen("BidEvent", handleBidEvent);
 
     return () => {
-      window.Echo.channel("bid.place").stopListening("BidEvent");
+      window.Echo.leave(channelName);
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,36 +134,25 @@ export default function DetailCarLiveBid({ car }: { car: ICarResponse }) {
       </div>
 
       <div className="grid grid-cols-2 gap-5 mt-6">
-        <ModalConfirmationBid car={car} amount={500000} />
-        <ModalConfirmationBid car={car} amount={1000000} />
+        <ModalConfirmationBid
+          car={car}
+          amount={500000}
+          createdPrice={createdPrice || 0}
+          className="sm:text-lg md:px-5 md:text-xl h-[44px]"
+        />
+        <ModalConfirmationBid
+          car={car}
+          amount={1000000}
+          createdPrice={createdPrice || 0}
+          className="sm:text-lg md:px-5 md:text-xl h-[44px]"
+        />
       </div>
 
       <div className="flex flex-col gap-2.5 mt-4">
         <div className="text-sm font-bold text-gray-800 sm:text-lg md:text-2xl">
           Penawaran Maksimum
         </div>
-        <FormMaxBid car={car} />
-
-        {/* <form
-          id="form-lock-bid"
-          className="flex items-center justify-between gap-2 mt-2 mb-5"
-        >
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="Masukkan Penawaran..."
-            className="py-2 px-2 border-2 rounded-md shadow-sm border-red-800 focus:border-red-800 w-[60%]"
-            // value=""
-          />
-
-          <Button
-            type="submit"
-            className="py-5 border-2 border-red-800 text-[1rem] bg-red-800 hover:bg-red-900 text-white w-[40%]"
-          >
-            <Icon icon="fa6-solid:money-bill" className="text-[1rem]" />
-            <span className="hidden sm:block">Masukkan</span>
-          </Button>
-        </form> */}
+        <FormMaxBid car={car} createdPrice={createdPrice || 0} type="detail" />
       </div>
     </>
   );
