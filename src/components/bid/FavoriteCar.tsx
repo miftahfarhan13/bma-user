@@ -12,9 +12,8 @@ import { SortCar } from "./SortCar";
 import { FilterDefectCar } from "./FilterDefectCar";
 import { FilterBrand } from "./FilterBrand";
 import EmptyState from "../state/EmptyState";
-import CarItemList from "../car/CarItemList";
 import CarItemSkeleton from "../car/CarItemSkeleton";
-import CarItemBid from "../car/Bid/CarItemBid";
+import CarBidList from "../car/Bid/CarBidList";
 
 export default function FavoriteCar({ isFavorite }: { isFavorite: boolean }) {
   const { token, user } = useAuth();
@@ -134,27 +133,16 @@ export default function FavoriteCar({ isFavorite }: { isFavorite: boolean }) {
         <>
           {data?.data && data?.data?.total > 0 ? (
             <>
-              {listType === "grid" ? (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-                    {data?.data?.data?.map((car) => (
-                      <CarItemBid
-                        key={car?.id}
-                        car={car}
-                        userId={user?.id || 0}
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-col gap-5">
-                    {data?.data?.data?.map((car) => (
-                      <CarItemList key={car?.id} car={car} />
-                    ))}
-                  </div>
-                </>
-              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+                {data?.data?.data?.map((car) => (
+                  <CarBidList
+                    key={car?.id}
+                    car={car}
+                    userId={user?.id || 0}
+                    listType={listType}
+                  />
+                ))}
+              </div>
             </>
           ) : (
             <>

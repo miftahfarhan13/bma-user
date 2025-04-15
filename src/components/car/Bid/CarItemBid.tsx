@@ -1,7 +1,7 @@
 import { ICarResponse } from "@/types/car";
 import { formatCurrency, formatNumber } from "@/utils/format/number";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import moment from "moment";
 import IconUsers from "@/icons/IconUsers";
@@ -9,7 +9,7 @@ import IconPlate from "@/icons/IconPlate";
 import IconNIK from "@/icons/IconNIK";
 import IconTax from "@/icons/IconTax";
 import useToggleFavorite from "@/utils/hooks/useToggleFavorite";
-import { BidEventPayload, IBid, IBidLiveResponse } from "@/types/bid";
+import { IBid } from "@/types/bid";
 import IconBid from "@/icons/IconBid";
 import HideCarCountdown from "../HideCarCountdown";
 import BadgeDefectStatus from "../BadgeDefectStatus";
@@ -18,74 +18,26 @@ import { ModalConfirmationBid } from "./ModalConfirmationBid";
 import FormMaxBid from "./FormMaxBid";
 
 export default function CarItemBid({
-  userId,
   car,
   bid,
+  isCurrentlyWin,
+  createdPrice,
+  bidCount,
+  bidUserCount,
 }: {
-  userId: number;
   car: ICarResponse;
   bid?: IBid;
+  isCurrentlyWin: boolean;
+  createdPrice: number;
+  bidCount: number;
+  bidUserCount: number;
 }) {
+  const urlDetail = `/car/${car?.id}/detail`;
+  const isSold = car?.status === "Terjual";
+
   const { handleToggleFavorite } = useToggleFavorite({
     id: car?.id.toString(),
   });
-
-  const [sessionTimeEnd, setSessionTimeEnd] = useState<string | undefined>("");
-  const [createdPrice, setCreatedPrice] = useState<number | undefined>(
-    undefined
-  );
-  const [bidCount, setBidCount] = useState<number | undefined>(undefined);
-  const [bidUserCount, setBidUserCount] = useState<number | undefined>(
-    undefined
-  );
-  const [isCurrentlyWin, setIsCurrentlyWin] = useState(false);
-
-  const isSold = car?.status === "Terjual";
-
-  useEffect(() => {
-    setCreatedPrice(car?.created_price || car?.price);
-    setBidCount(car?.bids_count);
-    setBidUserCount(car?.unique_user_bids_count);
-    setSessionTimeEnd(car?.session_time_end);
-    if (car?.bids && car?.bids?.length > 0) {
-      const isWin = car?.bids[0]?.user_id === userId;
-      setIsCurrentlyWin(isWin);
-    } else {
-      setIsCurrentlyWin(false);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [car, car?.id]);
-
-  console.log(sessionTimeEnd);
-
-  const urlDetail = `/car/${car?.id}/detail`;
-
-  useEffect(() => {
-    const channelName = "bid.place";
-    const channel = window.Echo.channel(channelName);
-
-    const handleBidEvent = async (e: BidEventPayload) => {
-      const liveCar: IBidLiveResponse | undefined = e.data[car?.id ?? -1];
-      if (!liveCar) return;
-
-      setCreatedPrice(liveCar.price);
-      setBidCount(liveCar["bid-count"]);
-      setBidUserCount(liveCar["bid-user-count"]);
-      setSessionTimeEnd(liveCar.session_time_end);
-
-      const bid = liveCar[`bid-place-1`];
-
-      setIsCurrentlyWin(bid.user === userId);
-    };
-
-    channel.listen("BidEvent", handleBidEvent);
-
-    return () => {
-      window.Echo.leave(channelName);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="shadow rounded-xl cursor-pointer">
