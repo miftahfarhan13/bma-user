@@ -4,6 +4,7 @@ import { getMe } from "@/service/auth";
 import useLogout from "../hooks/useLogout";
 import useSetHeaderToken from "../hooks/useSetHeaderToken";
 import { IUserResponse } from "@/types/user";
+import Image from "next/image";
 
 interface AuthContextType {
   user: IUserResponse | null;
@@ -54,7 +55,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         token: token || "",
       }}
     >
-      {isLoaded ? children : <div>Loading...</div>}
+      {isLoaded ? (
+        children
+      ) : (
+        <div className="h-[100dvh] flex justify-center">
+          <Image
+            src="/images/logo.png"
+            alt="Logo"
+            className="object-contain"
+            width={140}
+            height={40}
+          />
+        </div>
+      )}
     </AuthContext.Provider>
   );
 };
