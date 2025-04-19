@@ -9,7 +9,7 @@ interface AuctionCountdownProps {
   endTime: string;
 }
 
-export const AuctionCountdown = ({
+export const AuctionCountdownList = ({
   label,
   serverTime,
   endTime,
@@ -42,7 +42,6 @@ export const AuctionCountdown = ({
           }
 
           if (completed) {
-            window.location.reload();
             playSound("audio-bid-over");
             return (
               <div className="bg-red-900 text-center text-white font-bold py-1">

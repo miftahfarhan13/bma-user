@@ -3,17 +3,20 @@ import { ICarResponse } from "@/types/car";
 import React, { useEffect, useState } from "react";
 import CarItemBid from "./CarItemBid";
 import CarItemBidList from "./CarItemBidList";
+import { IBiddingTimeResponse } from "@/types/biddingTime";
 
 export default function CarBidList({
   userId,
   car,
   bid,
   listType,
+  biddingTime,
 }: {
   userId: number;
   car: ICarResponse;
   bid?: IBid;
   listType: string;
+  biddingTime: IBiddingTimeResponse;
 }) {
   const [sessionTimeEnd, setSessionTimeEnd] = useState<string | undefined>("");
   const [createdPrice, setCreatedPrice] = useState<number | undefined>(
@@ -24,6 +27,7 @@ export default function CarBidList({
     undefined
   );
   const [isCurrentlyWin, setIsCurrentlyWin] = useState(false);
+  const [serverTimeStart, setServerTimeStart] = useState<string>("");
 
   useEffect(() => {
     setCreatedPrice(car?.created_price || car?.price);
@@ -40,7 +44,9 @@ export default function CarBidList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [car, car?.id]);
 
-  console.log(sessionTimeEnd);
+  useEffect(() => {
+    setServerTimeStart(biddingTime?.server_time);
+  }, [biddingTime?.server_time]);
 
   useEffect(() => {
     const channelName = "bid.place";
@@ -54,6 +60,7 @@ export default function CarBidList({
       setBidCount(liveCar["bid-count"]);
       setBidUserCount(liveCar["bid-user-count"]);
       setSessionTimeEnd(liveCar.session_time_end);
+      setServerTimeStart(liveCar?.datetime);
 
       const bid = liveCar[`bid-place-1`];
 
@@ -79,6 +86,9 @@ export default function CarBidList({
             createdPrice={createdPrice || 0}
             bidCount={bidCount || 0}
             bidUserCount={bidUserCount || 0}
+            serverTimeStart={serverTimeStart}
+            sessionTimeEnd={sessionTimeEnd || ""}
+            biddingTime={biddingTime}
           />
         </>
       ) : (

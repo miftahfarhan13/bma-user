@@ -8,7 +8,7 @@ export default function NotifyEvent() {
   useEffect(() => {
     if (!user?.id) return;
 
-    const channelName = `noty.${user.id}`;
+    const channelName = `notification.${user.id}`;
     const channel = window.Echo.channel(channelName);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,12 +22,12 @@ export default function NotifyEvent() {
           if (active.user == user.id) {
             toast.success(
               `Anda sedang memenangkan bidding pada mobil (${active.car_id}) ${active.car_name}.`,
-              { position: "top-center" }
+              { description: "", position: "top-center" }
             );
           } else {
             toast.error(
               `Anda sedang kalah bidding pada mobil (${active.car_id}) ${active.car_name}.`,
-              { position: "top-center" }
+              { description: "", position: "top-center" }
             );
           }
         }
@@ -36,7 +36,7 @@ export default function NotifyEvent() {
       }
     };
 
-    channel.listen("NotyEvent", handleNotyEvent);
+    channel.listen("NotificationEvent", handleNotyEvent);
 
     return () => {
       window.Echo.leave(channelName);

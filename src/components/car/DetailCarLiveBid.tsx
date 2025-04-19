@@ -24,6 +24,7 @@ export default function DetailCarLiveBid({ car }: { car: ICarResponse }) {
     setBidCount,
     setBidUserCount,
     setSessionTimeEnd,
+    setServerTime
   } = useBid();
   const { data, isLoading, isPending } = useQuery({
     queryKey: ["bids-by-car", token, car],
@@ -59,6 +60,7 @@ export default function DetailCarLiveBid({ car }: { car: ICarResponse }) {
       setBidCount(liveCar["bid-count"]);
       setBidUserCount(liveCar["bid-user-count"]);
       setSessionTimeEnd(liveCar.session_time_end);
+      setServerTime(liveCar?.datetime)
 
       const currentBids: IBid[] = [];
       for (let i = 1; i <= 3; i++) {

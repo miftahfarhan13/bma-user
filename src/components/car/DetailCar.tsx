@@ -40,13 +40,16 @@ export default function DetailCar({
     setCreatedPrice,
     setBidCount,
     setBidUserCount,
+    serverTime,
+    setServerTime,
   } = useBid();
 
-  const serverTime = moment(biddingTime?.server_time);
+  const serverTimeStart = moment(serverTime);
   const dateAuctionStart = moment(data?.session_time_start);
   const dateAuctionEnd = moment(sessionTimeEnd);
 
-  const isAuctionEnd = serverTime.isAfter(dateAuctionEnd) || !!data?.winner_id;
+  const isAuctionEnd =
+    serverTimeStart.isAfter(dateAuctionEnd) || !!data?.winner_id;
 
   const isAuctionNotStart =
     moment(new Date()) < moment(data?.session_time_start) ||
@@ -55,8 +58,8 @@ export default function DetailCar({
   const isAuctionActive =
     biddingTime?.current_bidding_time &&
     !isAuctionEnd &&
-    serverTime.isSameOrAfter(dateAuctionStart) &&
-    serverTime.isSameOrBefore(dateAuctionEnd) &&
+    serverTimeStart.isSameOrAfter(dateAuctionStart) &&
+    serverTimeStart.isSameOrBefore(dateAuctionEnd) &&
     !data?.winner_id;
 
   useEffect(() => {
@@ -66,6 +69,11 @@ export default function DetailCar({
     setSessionTimeEnd(data?.session_time_end);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    setServerTime(biddingTime?.server_time);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [biddingTime?.server_time]);
 
   const { handleToggleFavorite } = useToggleFavorite({ id });
 
@@ -109,10 +117,10 @@ export default function DetailCar({
                     ? "Lelang berakhir dalam: "
                     : "Lelang selanjutnya dimulai dalam: "
                 }
-                serverTime={biddingTime?.server_time}
+                serverTime={serverTime || ""}
                 endTime={
                   biddingTime?.current_bidding_time?.end_time
-                    ? data?.session_time_end
+                    ? sessionTimeEnd || ""
                     : biddingTime?.next_bidding_time?.start_time
                 }
               />

@@ -14,8 +14,15 @@ import { FilterBrand } from "./FilterBrand";
 import EmptyState from "../state/EmptyState";
 import CarItemSkeleton from "../car/CarItemSkeleton";
 import CarBidList from "../car/Bid/CarBidList";
+import { IBiddingTimeResponse } from "@/types/biddingTime";
 
-export default function FavoriteCar({ isFavorite }: { isFavorite: boolean }) {
+export default function FavoriteCar({
+  isFavorite,
+  biddingTime,
+}: {
+  isFavorite: boolean;
+  biddingTime: IBiddingTimeResponse;
+}) {
   const { token, user } = useAuth();
   const [listType, setListType] = useState("grid");
 
@@ -140,6 +147,7 @@ export default function FavoriteCar({ isFavorite }: { isFavorite: boolean }) {
                     car={car}
                     userId={user?.id || 0}
                     listType={listType}
+                    biddingTime={biddingTime}
                   />
                 ))}
               </div>

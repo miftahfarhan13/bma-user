@@ -12,6 +12,8 @@ interface BidContextType {
   setBids: (value?: IBid[]) => void;
   sessionTimeEnd?: string;
   setSessionTimeEnd: (value?: string) => void;
+  serverTime?: string;
+  setServerTime: (value?: string) => void;
 }
 
 const BidContext = createContext<BidContextType | undefined>(undefined);
@@ -28,6 +30,7 @@ export const BidProvider: React.FC<{ children: React.ReactNode }> = ({
     undefined
   );
   const [bids, setBids] = useState<IBid[] | undefined>([]);
+  const [serverTime, setServerTime] = useState<string | undefined>("");
 
   return (
     <BidContext.Provider
@@ -42,6 +45,8 @@ export const BidProvider: React.FC<{ children: React.ReactNode }> = ({
         setBids,
         sessionTimeEnd,
         setSessionTimeEnd,
+        serverTime,
+        setServerTime,
       }}
     >
       {children}

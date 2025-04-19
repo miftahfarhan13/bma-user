@@ -16,6 +16,8 @@ import BadgeDefectStatus from "../BadgeDefectStatus";
 import { Badge } from "@/components/ui/badge";
 import { ModalConfirmationBid } from "./ModalConfirmationBid";
 import FormMaxBid from "./FormMaxBid";
+import { IBiddingTimeResponse } from "@/types/biddingTime";
+import { AuctionCountdownList } from "@/components/timer/AuctionCountdownList";
 
 export default function CarItemBid({
   car,
@@ -24,6 +26,9 @@ export default function CarItemBid({
   createdPrice,
   bidCount,
   bidUserCount,
+  serverTimeStart,
+  sessionTimeEnd,
+  biddingTime,
 }: {
   car: ICarResponse;
   bid?: IBid;
@@ -31,6 +36,9 @@ export default function CarItemBid({
   createdPrice: number;
   bidCount: number;
   bidUserCount: number;
+  serverTimeStart: string;
+  sessionTimeEnd: string;
+  biddingTime: IBiddingTimeResponse;
 }) {
   const urlDetail = `/car/${car?.id}/detail`;
   const isSold = car?.status === "Terjual";
@@ -172,6 +180,14 @@ export default function CarItemBid({
             </div>
           </div>
         </a>
+
+        <AuctionCountdownList
+          label=""
+          serverTime={serverTimeStart}
+          endTime={
+            sessionTimeEnd || biddingTime?.current_bidding_time?.end_time
+          }
+        />
 
         <div className="grid grid-cols-2 gap-2.5">
           <ModalConfirmationBid
