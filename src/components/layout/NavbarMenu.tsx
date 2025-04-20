@@ -24,6 +24,7 @@ export const menus = [
     url: "/favorite/index",
     icon: "fa6-solid:thumbs-up",
     name: "Favorit",
+    hardReload: true,
   },
   {
     url: "/garage",
@@ -38,22 +39,35 @@ export default function NavbarMenu() {
 
   return (
     <div className="flex flex-row items-center gap-5">
-      {menus?.map((menu) => (
-        <TooltipProvider key={menu?.url}>
+      {menus.map((menu) => (
+        <TooltipProvider key={menu.url}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={menu?.url}>
-                <div
+              {menu.hardReload ? (
+                <a
+                  href={menu.url}
                   className={`${
-                    menu?.url === currentPage ? "text-red-600" : "text-gray-200"
-                  } hover:text-red-600 h-[2.375rem] w-[2.375rem] items-center justify-center rounded-full border border-transparent text-sm font-semibold  hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:hover:bg-neutral-700 sm:inline-flex`}
+                    menu.url === currentPage ? "text-red-600" : "text-gray-200"
+                  } hover:text-red-600 h-[2.375rem] w-[2.375rem] items-center justify-center rounded-full border border-transparent text-sm font-semibold hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:hover:bg-neutral-700 sm:inline-flex`}
                 >
-                  <Icon icon={menu?.icon} className="w-5 h-5  sm:h-6 sm:w-6" />
-                </div>
-              </Link>
+                  <Icon icon={menu.icon} className="w-5 h-5 sm:h-6 sm:w-6" />
+                </a>
+              ) : (
+                <Link href={menu.url}>
+                  <div
+                    className={`${
+                      menu.url === currentPage
+                        ? "text-red-600"
+                        : "text-gray-200"
+                    } hover:text-red-600 h-[2.375rem] w-[2.375rem] items-center justify-center rounded-full border border-transparent text-sm font-semibold hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:hover:bg-neutral-700 sm:inline-flex`}
+                  >
+                    <Icon icon={menu.icon} className="w-5 h-5 sm:h-6 sm:w-6" />
+                  </div>
+                </Link>
+              )}
             </TooltipTrigger>
             <TooltipContent>
-              <p>{menu?.name}</p>
+              <p>{menu.name}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

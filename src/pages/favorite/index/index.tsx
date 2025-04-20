@@ -3,7 +3,7 @@ import BottomNavigationMobile from "@/components/layout/BottomNavigationMobile";
 import Container from "@/components/layout/Container";
 import Header from "@/components/layout/Header";
 import Navbar from "@/components/layout/Navbar";
-// import BidTimer from "@/components/timer/BidTimer";
+import { AuctionCountdownList } from "@/components/timer/AuctionCountdownList";
 import { axiosClient } from "@/service/apiClient";
 import { IBiddingTimeResponse } from "@/types/biddingTime";
 import { GetServerSideProps } from "next";
@@ -39,15 +39,16 @@ export default function FavoritePage({
           <p className="text-center text-5xl text-red-900 font-extrabold">
             FAVORITKU
           </p>
-          {/* <div className="flex flex-col gap-1">
-            {!biddingTime?.current_bidding_time?.end_time && (
-              <div className="bg-red-900 text-center text-white font-bold py-1">
-                Lelang Telah Berakhir
-              </div>
-            )}
-            <BidTimer biddingTime={biddingTime} />
-          </div> */}
-          <FavoriteCar isFavorite biddingTime={biddingTime}/>
+          {biddingTime?.current_bidding_time && (
+            <div className="flex flex-col gap-1">
+              <AuctionCountdownList
+                label="Lelang berakhir dalam: "
+                serverTime={biddingTime?.server_time}
+                endTime={biddingTime?.current_bidding_time?.end_time}
+              />
+            </div>
+          )}
+          <FavoriteCar isFavorite biddingTime={biddingTime} />
         </div>
       </Container>
       <BottomNavigationMobile />

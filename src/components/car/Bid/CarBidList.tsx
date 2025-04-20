@@ -81,7 +81,6 @@ export default function CarBidList({
         <>
           <CarItemBid
             car={car}
-            bid={bid}
             isCurrentlyWin={isCurrentlyWin}
             createdPrice={createdPrice || 0}
             bidCount={bidCount || 0}

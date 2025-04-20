@@ -20,4 +20,5 @@ export type IPaginationParams = {
   date?: string;
   sort?: string;
   orderBy?: string;
+  perPage?: number;
 };

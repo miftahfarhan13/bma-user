@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { MultiValue } from "react-select";
 
 interface UsePaginationProps {
-  pageSize: number;
+  perPage: number;
   page: number;
   search: string | undefined;
   orderBy: string;
   sort: "asc" | "desc";
   brandName: string[];
   defectStatus: string[];
-  handlePageSizeChange: (value: number) => void;
+  handlePerPageChange: (value: number) => void;
   handlePageChange: (value: number) => void;
   handleSearchChange: (value: string) => void;
   handleOrderByChange: (orderBy: string, sort: "asc" | "desc") => void;
@@ -21,7 +21,7 @@ interface UsePaginationProps {
 
 export const usePagination = (): UsePaginationProps => {
   const router = useRouter();
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [perPage, setPerPage] = useState<number>(1000);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string | undefined>();
   const [orderBy, setOrderBy] = useState<string>("");
@@ -29,13 +29,13 @@ export const usePagination = (): UsePaginationProps => {
   const [brandName, setBrandName] = useState<string[]>([]);
   const [defectStatus, setDefectStatus] = useState<string[]>([]);
 
-  const handlePageSizeChange = (value: number) => {
-    setPageSize(value);
+  const handlePerPageChange = (value: number) => {
+    setPerPage(value);
     setPage(1);
     router.replace({
       query: {
         ...router.query,
-        page_size: value.toString(),
+        per_page: value.toString(),
         page: "1",
       },
     });
@@ -102,7 +102,7 @@ export const usePagination = (): UsePaginationProps => {
   };
 
   useEffect(() => {
-    const queryPageSize = router.query.page_size;
+    const queryPerPage = router.query.per_page;
     const queryPage = router.query.page;
     const queryOrderBy = router.query.order_by;
     const querySort = router.query.sort;
@@ -110,8 +110,8 @@ export const usePagination = (): UsePaginationProps => {
     const queryBrandName = router.query.brand_name;
     const queryDefectStatus = router.query.defect_status;
 
-    if (queryPageSize && !isNaN(Number(queryPageSize))) {
-      setPageSize(Number(queryPageSize));
+    if (queryPerPage && !isNaN(Number(queryPerPage))) {
+      setPerPage(Number(queryPerPage));
     }
     if (queryPage && !isNaN(Number(queryPage))) {
       setPage(Number(queryPage));
@@ -142,14 +142,14 @@ export const usePagination = (): UsePaginationProps => {
   }, [router.query]);
 
   return {
-    pageSize,
+    perPage,
     page,
     search,
     orderBy,
     sort,
     brandName,
     defectStatus,
-    handlePageSizeChange,
+    handlePerPageChange,
     handlePageChange,
     handleSearchChange,
     handleOrderByChange,

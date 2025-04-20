@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { placeBid, placeLockBid } from "@/service/bid";
 import { IPlaceBidRequest } from "@/types/bid";
-import { playSound } from "../function/sound";
+import { playSound, stopSound } from "../function/sound";
 
 export default function usePlaceBid() {
   const mutationPlaceBid = useMutation({ mutationFn: placeBid });
@@ -13,6 +13,7 @@ export default function usePlaceBid() {
     mutationPlaceBid.mutate(body, {
       onSuccess() {
         playSound("audio-bid-2");
+        stopSound("audio-alert-1-minute")
       },
       onError(error: Error) {
         if (error) {
@@ -33,6 +34,7 @@ export default function usePlaceBid() {
     mutationPlaceLockBid.mutate(body, {
       onSuccess() {
         playSound("audio-bid-1");
+        stopSound("audio-alert-1-minute")
       },
       onError(error: Error) {
         if (error) {

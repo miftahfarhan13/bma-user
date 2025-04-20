@@ -1,4 +1,4 @@
-import { getAvailableCars } from "@/service/car";
+import { getAvailableCars, getAvailableFavoriteCars } from "@/service/car";
 import { useAuth } from "@/utils/context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
@@ -27,6 +27,7 @@ export default function FavoriteCar({
   const [listType, setListType] = useState("grid");
 
   const {
+    perPage,
     search,
     orderBy,
     sort,
@@ -40,7 +41,7 @@ export default function FavoriteCar({
 
   const { data, isLoading, isPending } = useQuery({
     queryKey: [
-      "available-cars",
+      "favorite-cars",
       token,
       search,
       orderBy,
@@ -49,15 +50,26 @@ export default function FavoriteCar({
       defectStatus,
     ],
     queryFn: () =>
-      getAvailableCars({
-        isPaginate: "true",
-        search,
-        sort,
-        orderBy,
-        brandName,
-        defectStatus,
-        isFavorite: isFavorite ? "true" : undefined,
-      }),
+      biddingTime?.current_bidding_time
+        ? getAvailableCars({
+            isPaginate: "true",
+            search,
+            sort,
+            orderBy,
+            brandName,
+            defectStatus,
+            perPage,
+            isFavorite: isFavorite ? "true" : undefined,
+          })
+        : getAvailableFavoriteCars({
+            isPaginate: "true",
+            search,
+            sort,
+            orderBy,
+            brandName,
+            perPage,
+            defectStatus,
+          }),
     refetchOnWindowFocus: false,
     enabled: !!token,
   });

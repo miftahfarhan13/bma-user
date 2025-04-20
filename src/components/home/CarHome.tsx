@@ -15,7 +15,7 @@ export default function CarHome() {
 
   const { data, isLoading, isPending } = useQuery({
     queryKey: ["latest-seen-cars", token],
-    queryFn: () => getLatestSeenCars({ isPaginate: "true" }),
+    queryFn: () => getLatestSeenCars({ isPaginate: "true", perPage: 1000 }),
     refetchOnWindowFocus: false,
     enabled: !!token,
   });

@@ -56,7 +56,6 @@ export default function DetailCar({
     moment(new Date()) < moment(data?.session_date);
 
   const isAuctionActive =
-    biddingTime?.current_bidding_time &&
     !isAuctionEnd &&
     serverTimeStart.isSameOrAfter(dateAuctionStart) &&
     serverTimeStart.isSameOrBefore(dateAuctionEnd) &&
@@ -113,13 +112,13 @@ export default function DetailCar({
             {isAuctionActive && data?.session_time_end && (
               <AuctionCountdown
                 label={
-                  biddingTime?.current_bidding_time?.end_time
+                  isAuctionActive
                     ? "Lelang berakhir dalam: "
                     : "Lelang selanjutnya dimulai dalam: "
                 }
                 serverTime={serverTime || ""}
                 endTime={
-                  biddingTime?.current_bidding_time?.end_time
+                  isAuctionActive
                     ? sessionTimeEnd || ""
                     : biddingTime?.next_bidding_time?.start_time
                 }

@@ -1,17 +1,21 @@
 import Countdown from "react-countdown";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { playSound } from "@/utils/function/sound";
+import CircularProgress from "../ui/circular-progress";
 
 interface AuctionCountdownProps {
-  label: string;
   serverTime: string;
   endTime: string;
+  size: number;
+  onAuctionEnd: () => void;
 }
 
-export const AuctionCountdownList = ({
-  label,
+export const AuctionCountdownCircular = ({
   serverTime,
   endTime,
+  size,
+  onAuctionEnd,
 }: AuctionCountdownProps) => {
   const [countdownTarget, setCountdownTarget] = useState<Date | null>(null);
 
@@ -34,18 +38,20 @@ export const AuctionCountdownList = ({
         key={countdownKey}
         date={countdownTarget}
         renderer={({ hours, minutes, seconds, completed }) => {
+          const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+
           if (completed) {
+            playSound("audio-bid-over");
+            onAuctionEnd();
             return null;
           }
 
-          return (
-            <p className="text-center text-red-900 font-bold underline">
-              {label}
-              {String(hours).padStart(2, "0")}:
-              {String(minutes).padStart(2, "0")}:
-              {String(seconds).padStart(2, "0")}
-            </p>
-          );
+          if (totalSeconds < 60) {
+            playSound("audio-alert-1-minute");
+            return <CircularProgress value={seconds} max={60} size={size} />;
+          }
+
+          return null;
         }}
       />
     </>

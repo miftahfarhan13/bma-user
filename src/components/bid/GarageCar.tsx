@@ -24,6 +24,7 @@ export default function GarageCar() {
   const [listType, setListType] = useState("grid");
 
   const {
+    perPage,
     search,
     orderBy,
     sort,
@@ -54,6 +55,7 @@ export default function GarageCar() {
         orderBy,
         brandName,
         defectStatus,
+        perPage,
         status: queryStatus,
       }),
     refetchOnWindowFocus: false,

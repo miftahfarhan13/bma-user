@@ -44,6 +44,21 @@ export const getAvailableCars = async (
   return response.data;
 };
 
+export const getAvailableFavoriteCars = async (
+  params: ICarParams = {}
+): Promise<ICarPaginationResponse> => {
+  const queryString = mapQueryString(params);
+  const response = await axiosClient.get(
+    `/cars/favorite/car${queryString ? `?${queryString}` : ""}`
+  );
+
+  if (response.status !== 200) {
+    throw new Error(response.data.message || "Error get cars");
+  }
+
+  return response.data;
+};
+
 export const getCarById = async (carId: string): Promise<ICarResponse> => {
   const response = await axiosClient.get(`/cars/detail/${carId}`);
 

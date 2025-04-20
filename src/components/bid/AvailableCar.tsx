@@ -21,6 +21,7 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
   const [listType, setListType] = useState("grid");
 
   const {
+    perPage,
     search,
     orderBy,
     sort,
@@ -41,6 +42,7 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
       sort,
       brandName,
       defectStatus,
+      perPage
     ],
     queryFn: () =>
       getAvailableCars({
@@ -50,6 +52,7 @@ export default function AvaiableCar({ isFavorite }: { isFavorite: boolean }) {
         orderBy,
         brandName,
         defectStatus,
+        perPage,
         isFavorite: isFavorite ? "true" : undefined,
       }),
     refetchOnWindowFocus: false,
