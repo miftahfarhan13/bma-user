@@ -99,7 +99,7 @@ export default function CarItemBidList({
                 {bidCount > 0 && (
                   <>
                     {isCurrentlyWin ? (
-                      <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-green-300/90 px-5 py-1 text-xs text-gray-800">
+                      <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-green-300/90 px-2 py-1 text-xs text-gray-800">
                         <Icon
                           icon={
                             isSold
@@ -110,7 +110,7 @@ export default function CarItemBidList({
                         Sedang Unggul
                       </div>
                     ) : (
-                      <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-red-300/90 px-5 py-1 text-xs text-gray-800">
+                      <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-red-300/90 px-2 py-1 text-xs text-gray-800">
                         <Icon icon="fa-solid:ban" />
                         Sedang Kalah
                       </div>
