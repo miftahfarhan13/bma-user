@@ -17,11 +17,13 @@ export function ModalConfirmationBid({
   amount,
   createdPrice,
   className,
+  disabledTriggerButton = false,
 }: {
   car: ICarResponse;
   amount: number;
   createdPrice: number;
   className?: string;
+  disabledTriggerButton?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const { mutationPlaceBid, handlePlaceBid } = usePlaceBid();
@@ -36,7 +38,8 @@ export function ModalConfirmationBid({
     <>
       <Button
         onClick={() => setOpen(true)}
-        className={`${className} w-full cursor-pointer text-sm font-bold text-white bg-yellow-600 hover:bg-yellow-700 rounded-lg hover:bg-auc-secondary`}
+        className={`${className} w-full cursor-pointer text-sm font-bold text-white bg-yellow-600 hover:bg-yellow-700 rounded-lg hover:bg-auc-secondary disabled:cursor-not-allowed`}
+        disabled={disabledTriggerButton}
       >
         + {formatCurrency(amount)}
       </Button>

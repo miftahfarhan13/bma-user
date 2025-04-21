@@ -20,10 +20,12 @@ export default function FormMaxBid({
   car,
   createdPrice,
   type,
+  disabledTriggerButton = false,
 }: {
   car: ICarResponse;
   createdPrice: number;
   type: string;
+  disabledTriggerButton?: boolean;
 }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -88,7 +90,7 @@ export default function FormMaxBid({
               className={`border-2 border-red-800 text-[1rem] bg-red-800 hover:bg-red-900 text-white ${
                 type === "detail" && "w-[40%]"
               } h-[38px]`}
-              disabled={mutationPlaceLockBid.isPending}
+              disabled={mutationPlaceLockBid.isPending || disabledTriggerButton}
               onClick={handleSubmit}
             >
               {mutationPlaceLockBid.isPending ? (
@@ -106,7 +108,11 @@ export default function FormMaxBid({
         <>
           <div
             className="text-gray-500 text-sm h-[38px] flex justify-center items-center"
-            onClick={() => setIsFormOpen(true)}
+            onClick={() => {
+              if (!disabledTriggerButton) {
+                setIsFormOpen(true);
+              }
+            }}
           >
             Klik untuk penawaran maksimum
             <Icon

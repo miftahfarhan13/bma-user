@@ -1,7 +1,7 @@
 import { ICarResponse } from "@/types/car";
 import { formatCurrency, formatNumber } from "@/utils/format/number";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import moment from "moment";
 import IconBid from "@/icons/IconBid";
@@ -11,26 +11,31 @@ import IconNIK from "@/icons/IconNIK";
 import IconTax from "@/icons/IconTax";
 import BadgeDefectStatus from "../BadgeDefectStatus";
 import useToggleFavorite from "@/utils/hooks/useToggleFavorite";
-import { IBid } from "@/types/bid";
-import HideCarListCountdown from "../HideCarListCountdown";
 import { ModalConfirmationBid } from "./ModalConfirmationBid";
 import FormMaxBid from "./FormMaxBid";
+import { IBiddingTimeResponse } from "@/types/biddingTime";
+import { AuctionCountdownCircular } from "@/components/timer/AuctionCountdownCircular";
 
 export default function CarItemBidList({
   car,
-  bid,
   isCurrentlyWin,
   createdPrice,
   bidCount,
   bidUserCount,
+  serverTimeStart,
+  sessionTimeEnd,
+  biddingTime,
 }: {
   car: ICarResponse;
-  bid?: IBid;
   isCurrentlyWin: boolean;
   createdPrice: number;
   bidCount: number;
   bidUserCount: number;
+  serverTimeStart: string;
+  sessionTimeEnd: string;
+  biddingTime: IBiddingTimeResponse;
 }) {
+  const [isAuctionOver, setIsAuctionOver] = useState(false);
   const urlDetail = `/car/${car?.id}/detail`;
 
   const { handleToggleFavorite } = useToggleFavorite({
@@ -38,6 +43,18 @@ export default function CarItemBidList({
   });
 
   const isSold = car?.status === "Terjual";
+
+  useEffect(() => {
+    const isAuctionEnd = moment(serverTimeStart).isAfter(
+      moment(sessionTimeEnd)
+    );
+    setIsAuctionOver(isAuctionEnd);
+  }, [serverTimeStart, sessionTimeEnd]);
+
+  const handleAuctionEnd = () => {
+    setIsAuctionOver(true);
+  };
+
   return (
     <div className="shadow rounded-xl">
       <div className="flex flex-col">
@@ -57,26 +74,50 @@ export default function CarItemBidList({
                     className="object-cover rounded-tl-xl object-center"
                     sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33.33vw, (min-width: 640px) 50vw, 100vw"
                   />
+
+                  {/* Overlay layer to darken image slightly */}
+                  <div className="absolute inset-0 bg-black/5 rounded-xl" />
                 </div>
                 <div className="absolute bottom-1 left-1 text-white bg-gray-700/60 text-xs px-4 py-1 rounded-full font-bold">
                   {car?.id}
                 </div>
-                {isCurrentlyWin ? (
-                  <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-green-300/90 px-5 py-1 text-xs text-gray-800">
-                    <Icon
-                      icon={
-                        isSold ? "fa6-solid:flag-checkered" : "fa6-solid:award"
-                      }
-                    />
-                    Sedang Unggul
-                  </div>
-                ) : (
-                  <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-red-300/90 px-5 py-1 text-xs text-gray-800">
-                    <Icon icon="fa-solid:ban" />
-                    Sedang Kalah
-                  </div>
+                {/* Countdown in center */}
+                <div
+                  className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2"
+                  style={{ width: 70, height: 70 }}
+                >
+                  <AuctionCountdownCircular
+                    serverTime={serverTimeStart}
+                    endTime={
+                      sessionTimeEnd ||
+                      biddingTime?.current_bidding_time?.end_time
+                    }
+                    size={70}
+                    onAuctionEnd={handleAuctionEnd}
+                  />
+                </div>
+                {bidCount > 0 && (
+                  <>
+                    {isCurrentlyWin ? (
+                      <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-green-300/90 px-5 py-1 text-xs text-gray-800">
+                        <Icon
+                          icon={
+                            isSold
+                              ? "fa6-solid:flag-checkered"
+                              : "fa6-solid:award"
+                          }
+                        />
+                        Sedang Unggul
+                      </div>
+                    ) : (
+                      <div className="absolute right-0 top-0 z-30 flex items-center justify-center gap-2 rounded-bl-xl bg-red-300/90 px-5 py-1 text-xs text-gray-800">
+                        <Icon icon="fa-solid:ban" />
+                        Sedang Kalah
+                      </div>
+                    )}
+                  </>
                 )}
-                {bid && <HideCarListCountdown bid={bid} />}
+
                 <div className="absolute bottom-1 right-1">
                   <div className="flex flex-col items-end gap-1">
                     {car?.is_flooded === 1 && (
@@ -166,16 +207,23 @@ export default function CarItemBidList({
               amount={500000}
               createdPrice={createdPrice || 0}
               className="text-xs"
+              disabledTriggerButton={isAuctionOver}
             />
             <ModalConfirmationBid
               car={car}
               amount={1000000}
               createdPrice={createdPrice || 0}
               className="text-xs"
+              disabledTriggerButton={isAuctionOver}
             />
           </div>
 
-          <FormMaxBid car={car} createdPrice={createdPrice || 0} type="list" />
+          <FormMaxBid
+            car={car}
+            createdPrice={createdPrice || 0}
+            type="list"
+            disabledTriggerButton={isAuctionOver}
+          />
         </div>
       </div>
       <a href={urlDetail}>

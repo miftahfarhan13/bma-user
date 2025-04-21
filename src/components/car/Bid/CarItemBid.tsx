@@ -216,26 +216,29 @@ export default function CarItemBid({
           </div>
         </a>
 
-        {!isAuctionOver && (
-          <div className="grid grid-cols-2 gap-2.5">
-            <ModalConfirmationBid
-              car={car}
-              amount={500000}
-              createdPrice={createdPrice || 0}
-              className="text-xs"
-            />
-            <ModalConfirmationBid
-              car={car}
-              amount={1000000}
-              createdPrice={createdPrice || 0}
-              className="text-xs"
-            />
-          </div>
-        )}
-
-        {!isAuctionOver && (
-          <FormMaxBid car={car} createdPrice={createdPrice || 0} type="list" />
-        )}
+        <div className="grid grid-cols-2 gap-2.5">
+          <ModalConfirmationBid
+            car={car}
+            amount={500000}
+            createdPrice={createdPrice || 0}
+            className="text-xs"
+            disabledTriggerButton={isAuctionOver}
+          />
+          <ModalConfirmationBid
+            car={car}
+            amount={1000000}
+            createdPrice={createdPrice || 0}
+            className="text-xs"
+            disabledTriggerButton={isAuctionOver}
+          />
+        </div>
+        
+        <FormMaxBid
+          car={car}
+          createdPrice={createdPrice || 0}
+          type="list"
+          disabledTriggerButton={isAuctionOver}
+        />
       </div>
       <a href={urlDetail}>
         <div className="bg-red-900 rounded-b-xl">

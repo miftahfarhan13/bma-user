@@ -1,4 +1,4 @@
-import { BidEventPayload, IBid, IBidLiveResponse } from "@/types/bid";
+import { BidEventPayload, IBidLiveResponse } from "@/types/bid";
 import { ICarResponse } from "@/types/car";
 import React, { useEffect, useState } from "react";
 import CarItemBid from "./CarItemBid";
@@ -8,13 +8,11 @@ import { IBiddingTimeResponse } from "@/types/biddingTime";
 export default function CarBidList({
   userId,
   car,
-  bid,
   listType,
   biddingTime,
 }: {
   userId: number;
   car: ICarResponse;
-  bid?: IBid;
   listType: string;
   biddingTime: IBiddingTimeResponse;
 }) {
@@ -94,11 +92,13 @@ export default function CarBidList({
         <>
           <CarItemBidList
             car={car}
-            bid={bid}
             isCurrentlyWin={isCurrentlyWin}
             createdPrice={createdPrice || 0}
             bidCount={bidCount || 0}
             bidUserCount={bidUserCount || 0}
+            serverTimeStart={serverTimeStart}
+            sessionTimeEnd={sessionTimeEnd || ""}
+            biddingTime={biddingTime}
           />
         </>
       )}
