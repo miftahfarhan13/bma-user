@@ -46,12 +46,12 @@ export default function UserHome() {
       <div className="flex flex-col gap-1 p-2 md:p-4 text-sm">
         <div className="flex flex-col">
           <p className="font-bold">Total Mobil Terjual</p>
-          <p>0</p>
+          <p>{user?.won_cars_terjual_count}</p>
         </div>
 
         <div className="flex flex-col">
           <p className="font-bold">Total Spend Belanja Mobil</p>
-          <p>Rp 0</p>
+          <p>{formatCurrency(user?.drp_nominal || 0)}</p>
         </div>
 
         <div className="flex flex-col">

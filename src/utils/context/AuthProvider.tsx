@@ -21,7 +21,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const token = useSetHeaderToken();
   const { handleSubmit: logout } = useLogout();
   const [user, setUser] = useState<IUserResponse | null>(null);
-  const [hasLoggedOut, setHasLoggedOut] = useState(false);
 
   const { data, error, isPending, isFetching, isSuccess, isError } = useQuery({
     queryKey: ["profile", token],
@@ -32,11 +31,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   useEffect(() => {
-    if (!isPending && !isFetching && error && !hasLoggedOut) {
-      setHasLoggedOut(true);
+    if (error) {
       logout();
     }
-  }, [error, isPending, isFetching, logout, hasLoggedOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   useEffect(() => {
     if (data) {

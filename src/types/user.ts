@@ -39,4 +39,5 @@ export interface IUserResponse {
   drp_class: string;
   drp_nominal: number;
   roles: Array<IRoleResponse>;
+  won_cars_terjual_count: number;
 }
