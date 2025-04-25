@@ -1,48 +1,53 @@
 import React, { useState } from "react";
 import { Form, Formik } from "formik";
-import { ILoginRequest } from "@/types/auth";
-import { AuthSchema } from "@/utils/schemas/auth";
+import { IResetPasswordRequest } from "@/types/auth";
+import { ResetPasswordSchema } from "@/utils/schemas/auth";
 import { InputField } from "@/components/input/InputField";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Header from "@/components/layout/Header";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login } from "@/service/auth";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useMutation } from "@tanstack/react-query";
+import { resetPassword } from "@/service/auth";
 import { Loader2 } from "lucide-react";
-import { setBearerToken } from "@/service/apiClient";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import Cookies from "js-cookie";
+import { GetServerSideProps } from "next";
+import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 
-export default function LoginPage() {
-  const query = useQueryClient();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      token: context.query.token,
+      email: context.query.email,
+    },
+  };
+};
+
+export default function ResetPasswordPage({
+  token,
+  email,
+}: {
+  token: string;
+  email: string;
+}) {
   const [showPassword, setShowPassword] = useState(false);
-  const initialValues: ILoginRequest = {
-    phone_number: "",
+  const initialValues: IResetPasswordRequest = {
+    email,
     password: "",
-    role: "user",
+    password_confirmation: "",
   };
 
-  const mutation = useMutation({ mutationFn: login });
+  const mutation = useMutation({ mutationFn: resetPassword });
 
-  const handleSubmit = (body: ILoginRequest) => {
+  const handleSubmit = (body: IResetPasswordRequest) => {
     mutation.mutate(body, {
-      onSuccess(data) {
+      onSuccess() {
         toast.success("Success", {
-          description: "Login Success",
+          description:
+            "Berhasil reset password, silahkan akses halaman login kembali",
           position: "top-right",
         });
-        localStorage.setItem("name", data?.user?.name);
-        localStorage.setItem("email", data?.user?.email);
-        localStorage.setItem("token", data?.token);
-        localStorage.setItem("role", data?.role[0]?.name);
-        // Save auth token to a cookie
-        Cookies.set("auth_token", data?.token, { expires: 7, path: "/" });
-        setBearerToken(data?.token);
-        query.invalidateQueries({ queryKey: ["profile"] });
-        window.location.href = "/";
       },
       onError(error: Error) {
         if (error) {
@@ -80,11 +85,12 @@ export default function LoginPage() {
           <div className="flex flex-col gap-5 p-5 max-w-[400px] w-full">
             <Formik
               initialValues={initialValues}
-              validationSchema={AuthSchema}
+              validationSchema={ResetPasswordSchema}
               enableReinitialize
               onSubmit={(e) => {
                 const value = {
                   ...e,
+                  token,
                 };
 
                 handleSubmit(value);
@@ -100,22 +106,32 @@ export default function LoginPage() {
                       height={70}
                       className="self-center object-contain"
                     />
+                    <p className="font-semibold">Reset Password</p>
                     <InputField
-                      label="Nomor Telepon"
-                      placeholder="Nomor Telepon"
-                      name="phone_number"
-                      error={errors?.phone_number}
-                      touched={touched?.phone_number}
-                      type="text"
+                      label="Email"
+                      placeholder="Email"
+                      name="email"
+                      error={errors?.email}
+                      touched={touched?.email}
+                      type="email"
                       required
                     />
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-5">
                       <InputField
                         label="Password"
                         placeholder="Password"
                         name="password"
                         error={errors?.password}
                         touched={touched?.password}
+                        type={showPassword ? "text" : "password"}
+                        required
+                      />
+                      <InputField
+                        label="Konfirmasi Password"
+                        placeholder="Konfirmasi Password"
+                        name="password_confirmation"
+                        error={errors?.password_confirmation}
+                        touched={touched?.password_confirmation}
                         type={showPassword ? "text" : "password"}
                         required
                       />
@@ -135,8 +151,8 @@ export default function LoginPage() {
                         </label>
                       </div>
                     </div>
-                    <Link href="/forgot-password">
-                      <p className="text-sm text-red-500 underline">Lupa Password?</p>
+                    <Link href="/login">
+                      <p className="text-sm text-red-500 underline">Login</p>
                     </Link>
                     <Button
                       type="submit"
@@ -144,7 +160,7 @@ export default function LoginPage() {
                       disabled={isLoading}
                     >
                       {isLoading && <Loader2 className="animate-spin" />}
-                      Login
+                      Simpan
                     </Button>
                   </div>
                 </Form>

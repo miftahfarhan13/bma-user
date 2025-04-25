@@ -57,11 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       {isLoaded ? (
         children
       ) : (
-        <div className="h-[100dvh] flex justify-center">
+        <div className="h-[100dvh] flex flex-col items-center justify-center">
           <Image
             src="/images/logo.png"
             alt="Logo"
-            className="object-contain"
+            className="object-contain w-[140px] h-[40px]"
             width={140}
             height={40}
           />
