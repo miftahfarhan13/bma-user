@@ -1,0 +1,9 @@
+version: "3.3"
+services:
+  bma-user:
+    build: .
+    ports:
+      - "3020:3000"
+    restart: always
+    # volumes:
+    #   - ./public:/app/public
