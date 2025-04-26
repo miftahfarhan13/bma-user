@@ -132,9 +132,7 @@ export default function CarItemBid({
           </a>
           <div
             className="cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
+            onClick={() => {
               handleToggleFavorite();
             }}
           >

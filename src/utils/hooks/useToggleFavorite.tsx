@@ -16,6 +16,7 @@ export default function useToggleFavorite({ id }: { id: string }) {
       {
         onSuccess() {
           query.invalidateQueries({ queryKey: ["available-cars"] });
+          query.invalidateQueries({ queryKey: ["favorite-cars"] });
           query.invalidateQueries({ queryKey: ["car"] });
         },
         onError(error) {

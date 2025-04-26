@@ -148,9 +148,7 @@ export default function CarItemBidList({
                 </div>
                 <div
                   className="cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
+                  onClick={() => {
                     handleToggleFavorite();
                   }}
                 >
