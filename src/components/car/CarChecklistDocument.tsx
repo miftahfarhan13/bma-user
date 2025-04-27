@@ -21,7 +21,11 @@ const DocumentRow = ({
   <TableRow>
     <TableCell className="p-2 md:p-3">{label}</TableCell>
     <TableCell className="p-2 md:p-3">
-      <div className={isAvailable ? "text-green-500" : "text-red-500"}>
+      <div
+        className={`${
+          isAvailable ? "text-green-500" : "text-red-500"
+        } text-base md:text-2xl`}
+      >
         <Icon
           icon={
             isAvailable ? "solar:check-circle-bold" : "solar:close-circle-bold"
