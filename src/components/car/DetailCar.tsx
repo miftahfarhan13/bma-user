@@ -307,28 +307,28 @@ export default function DetailCar({
           </div>
         </div>
         <Tabs defaultValue="document">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-4 h-10 md:h-14">
             <TabsTrigger
               value="document"
-              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold"
+              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold text-xs md:text-xl"
             >
               Dokumen
             </TabsTrigger>
             <TabsTrigger
               value="inspection"
-              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold"
+              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold text-xs md:text-xl"
             >
               Inspeksi
             </TabsTrigger>
             <TabsTrigger
               value="damage"
-              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold"
+              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold text-xs md:text-xl"
             >
               Kerusakan
             </TabsTrigger>
             <TabsTrigger
               value="video"
-              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold"
+              className="data-[state=active]:bg-[#82181a] data-[state=active]:text-white font-bold text-xs md:text-xl"
             >
               Video
             </TabsTrigger>
