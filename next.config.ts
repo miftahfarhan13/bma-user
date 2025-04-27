@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["127.0.0.1", "bm-auction.id"],
+    domains: ["127.0.0.1", "bm-auction.id", "stag.bm-auction.id"],
   },
 };
 
