@@ -46,8 +46,11 @@ export const AuctionCountdownCircular = ({
             return null;
           }
 
-          if (totalSeconds < 60) {
+          if (totalSeconds === 60) {
             playSound("audio-alert-1-minute");
+          }
+
+          if (totalSeconds < 60) {
             return <CircularProgress value={seconds} max={60} size={size} />;
           }
 
